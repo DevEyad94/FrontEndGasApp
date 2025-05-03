@@ -7,6 +7,7 @@ export interface DashboardFilter {
   maintenanceTypeId?: number;
   minCost?: number;
   maxCost?: number;
+  fieldId?: number;
 }
 
 export interface RegionDistribution {

@@ -11,6 +11,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
 import type { EChartsOption } from 'echarts';
 import { TextInputComponent } from '../../shared/components/text-input/text-input.component';
 import { ZskSelectComponent } from '../../shared/components/zsk/zsk-select.component';
+import { GasField } from '../../models/gas-field.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -29,6 +30,8 @@ export class DashboardComponent implements OnInit {
   filterForm!: FormGroup;
   maintenanceTypes: MaintenanceType[] = [];
   maintenanceTypeOptions: { value: any, label: string }[] = [];
+  fields: GasField[] = [];
+  fieldOptions: { value: any, label: string }[] = [];
 
   // Dashboard data
   dashboardData?: DashboardResponse;
@@ -71,7 +74,8 @@ export class DashboardComponent implements OnInit {
       toYear: [null],
       maintenanceTypeId: [null],
       minCost: [null],
-      maxCost: [null]
+      maxCost: [null],
+      fieldId: [null]
     });
 
     // Subscribe to form changes to reload data when filters change
@@ -81,11 +85,22 @@ export class DashboardComponent implements OnInit {
   }
 
   loadFilterOptions(): void {
-    this.zskService.getMaintenanceTypes().subscribe(result => {
-      this.maintenanceTypes = result;
+    forkJoin({
+      maintenanceTypes: this.zskService.getMaintenanceTypes(),
+      fields: this.zskService.getFields()
+    }).subscribe(result => {
+      // Process maintenance types
+      this.maintenanceTypes = result.maintenanceTypes;
       this.maintenanceTypeOptions = this.maintenanceTypes.map(type => ({
         value: type.zMaintenanceTypeId,
         label: type.name
+      }));
+
+      // Process fields
+      this.fields = result.fields;
+      this.fieldOptions = this.fields.map(field => ({
+        value: field.zFieldId,
+        label: field.name
       }));
     });
   }

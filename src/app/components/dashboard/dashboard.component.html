@@ -75,6 +75,17 @@
         </div>
 
         <div>
+          <app-zsk-select
+            formControlName="fieldId"
+            label="Field"
+            id="fieldId"
+            name="fieldId"
+            placeholder="All Fields"
+            [options]="fieldOptions"
+          ></app-zsk-select>
+        </div>
+
+        <div>
           <app-text-input
             formControlName="minCost"
             type="number"

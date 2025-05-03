@@ -50,6 +50,10 @@ export class DashboardService {
       params = params.set('MaxCost', filter.maxCost.toString());
     }
 
+    if (filter.fieldId !== undefined && filter.fieldId !== null) {
+      params = params.set('FieldId', filter.fieldId.toString());
+    }
+
     return this.http.get<GenericResponse<DashboardResponse>>(this.baseUrl, { params }).pipe(
       map(response => response.data)
     );
