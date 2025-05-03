@@ -28,6 +28,7 @@ export class HasRoleDirective implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Initial check with user state
+    console.log(this.appHasRole);
     this.authService.currentUser$
       .pipe(takeUntil(this.destroy$))
       .subscribe(this.updateView.bind(this));
@@ -46,6 +47,8 @@ export class HasRoleDirective implements OnInit, OnDestroy {
     if (user?.token) {
       // Check if any of the required roles match the user's roles
       if (this.appHasRole && this.appHasRole.length > 0) {
+        console.log(user);
+
         // Check if user has any of the required roles
         const hasRequiredRole = this.appHasRole.some(role =>
           user.role.some((userRole: string) => userRole === role)

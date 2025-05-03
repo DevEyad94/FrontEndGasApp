@@ -12,7 +12,7 @@ import {
   ProductionRecord,
   AddProductionRecordDto,
   UpdateProductionRecordDto,
-  ProductionRecordFilter
+  ProductionRecordFilter,
 } from '../../models/production-record.model';
 import { GasField } from '../../models/gas-field.model';
 import { Subscription } from 'rxjs';
@@ -25,7 +25,8 @@ import { ZskSelectComponent } from '../../shared/components/zsk/zsk-select.compo
 import { Pagination } from '../../models/pagination.model';
 import { ToastService } from '../../shared/services/toast.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
-
+import { HasRoleDirective } from '../../shared/directives/hasRole.directive';
+import { Roles } from '../../core/enum/roles.enum';
 @Component({
   selector: 'app-production-records',
   standalone: true,
@@ -37,19 +38,21 @@ import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/c
     DatePickerComponent,
     LabelComponent,
     ZskSelectComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    HasRoleDirective,
   ],
   templateUrl: './production-records.component.html',
-  styleUrls: ['./production-records.component.scss']
+  styleUrls: ['./production-records.component.scss'],
 })
 export class ProductionRecordsComponent implements OnInit, OnDestroy {
   Math = Math;
+  role = Roles;
   productionRecords: ProductionRecord[] = [];
   pagination: Pagination = {
     currentPage: 1,
     itemsPerPage: 10,
     totalItems: 0,
-    totalPages: 0
+    totalPages: 0,
   };
   fields: GasField[] = [];
   recordForm!: FormGroup;
@@ -71,7 +74,7 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   // Add property to store cached options
-  private fieldOptions: {value: number, label: string}[] = [];
+  private fieldOptions: { value: number; label: string }[] = [];
 
   // Delete confirmation properties
   showDeleteConfirmation = false;
@@ -82,7 +85,7 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
     private zskService: ZskService,
     private fb: FormBuilder,
     private toastService: ToastService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.initForms();
@@ -102,7 +105,7 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
       dateOfProduction: ['', Validators.required],
       productionOfCost: [0, [Validators.required, Validators.min(0)]],
       productionRate: [0, [Validators.required, Validators.min(0)]],
-      zFieldId: [null, Validators.required]
+      zFieldId: [null, Validators.required],
     });
 
     this.filterForm = this.fb.group({
@@ -112,7 +115,7 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
       zFieldId: [null],
       minProductionRate: [null],
       maxProductionRate: [null],
-      year: [null]
+      year: [null],
     });
 
     const filterSubscription = this.filterForm.valueChanges
@@ -138,8 +141,10 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error fetching fields:', error);
-        this.toastService.error('Failed to load fields. Please try again later.');
-      }
+        this.toastService.error(
+          'Failed to load fields. Please try again later.'
+        );
+      },
     });
   }
 
@@ -147,24 +152,28 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     const filters: ProductionRecordFilter = this.filterForm.value;
 
-    this.gasService.getProductionRecordsWithFilter(
-      filters,
-      this.pagination.currentPage,
-      this.pagination.itemsPerPage,
-      this.sortColumn,
-      this.sortDirection
-    ).subscribe({
-      next: (response) => {
-        this.productionRecords = response.result.data || [];
-        this.pagination = response.pagination;
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error fetching production records:', error);
-        this.isLoading = false;
-        this.toastService.error('Failed to load production records. Please try again later.');
-      }
-    });
+    this.gasService
+      .getProductionRecordsWithFilter(
+        filters,
+        this.pagination.currentPage,
+        this.pagination.itemsPerPage,
+        this.sortColumn,
+        this.sortDirection
+      )
+      .subscribe({
+        next: (response) => {
+          this.productionRecords = response.result.data || [];
+          this.pagination = response.pagination;
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error fetching production records:', error);
+          this.isLoading = false;
+          this.toastService.error(
+            'Failed to load production records. Please try again later.'
+          );
+        },
+      });
   }
 
   onPageChange(page: number): void {
@@ -197,7 +206,7 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
       productionRecordGuid: '',
       productionOfCost: 0,
       productionRate: 0,
-      zFieldId: null
+      zFieldId: null,
     });
     this.isEditMode = false;
     this.selectedRecord = null;
@@ -206,7 +215,9 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     if (this.recordForm.invalid) {
       this.markFormGroupTouched(this.recordForm);
-      this.toastService.warning('Please fill in all required fields correctly.');
+      this.toastService.warning(
+        'Please fill in all required fields correctly.'
+      );
       return;
     }
 
@@ -219,7 +230,7 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
         dateOfProduction: recordData.dateOfProduction,
         productionOfCost: recordData.productionOfCost,
         productionRate: recordData.productionRate,
-        zFieldId: recordData.zFieldId
+        zFieldId: recordData.zFieldId,
       };
 
       this.gasService.updateProductionRecord(updateData).subscribe({
@@ -229,15 +240,17 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
         error: (error) => {
           console.error('Error updating record:', error);
           this.isSubmitting = false;
-          this.toastService.error('Failed to update production record. Please try again.');
-        }
+          this.toastService.error(
+            'Failed to update production record. Please try again.'
+          );
+        },
       });
     } else {
       const newData: AddProductionRecordDto = {
         dateOfProduction: recordData.dateOfProduction,
         productionOfCost: recordData.productionOfCost,
         productionRate: recordData.productionRate,
-        zFieldId: recordData.zFieldId
+        zFieldId: recordData.zFieldId,
       };
 
       this.gasService.addProductionRecord(newData).subscribe({
@@ -247,8 +260,10 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
         error: (error) => {
           console.error('Error adding record:', error);
           this.isSubmitting = false;
-          this.toastService.error('Failed to add production record. Please try again.');
-        }
+          this.toastService.error(
+            'Failed to add production record. Please try again.'
+          );
+        },
       });
     }
   }
@@ -275,7 +290,7 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
       dateOfProduction: this.formatDateForInput(record.dateOfProduction),
       productionOfCost: record.productionOfCost,
       productionRate: record.productionRate,
-      zFieldId: record.zFieldId
+      zFieldId: record.zFieldId,
     });
   }
 
@@ -302,16 +317,22 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
   }
 
   performDeleteRecord(record: ProductionRecord): void {
-    this.gasService.deleteProductionRecord(record.productionRecordGuid).subscribe({
-      next: () => {
-        this.loadRecords();
-        this.toastService.success(`Production record for ${record.fieldName} has been deleted.`);
-      },
-      error: (error) => {
-        console.error('Error deleting record:', error);
-        this.toastService.error('Failed to delete production record. Please try again.');
-      }
-    });
+    this.gasService
+      .deleteProductionRecord(record.productionRecordGuid)
+      .subscribe({
+        next: () => {
+          this.loadRecords();
+          this.toastService.success(
+            `Production record for ${record.fieldName} has been deleted.`
+          );
+        },
+        error: (error) => {
+          console.error('Error deleting record:', error);
+          this.toastService.error(
+            'Failed to delete production record. Please try again.'
+          );
+        },
+      });
   }
 
   onFileSelected(event: Event): void {
@@ -336,18 +357,25 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
         this.loadRecords();
         this.isLoading = false;
         this.selectedFile = null;
-        const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+        const fileInput = document.getElementById(
+          'fileInput'
+        ) as HTMLInputElement;
         if (fileInput) {
           fileInput.value = '';
         }
-        this.toastService.success(`Successfully imported ${count} production records.`);
+        this.toastService.success(
+          `Successfully imported ${count} production records.`
+        );
       },
       error: (error) => {
         console.error('Error importing records:', error);
-        this.importMessage = 'Error importing records. Please check the file format.';
+        this.importMessage =
+          'Error importing records. Please check the file format.';
         this.isLoading = false;
-        this.toastService.error('Failed to import records. Please check the file format and try again.');
-      }
+        this.toastService.error(
+          'Failed to import records. Please check the file format and try again.'
+        );
+      },
     });
   }
 
@@ -357,13 +385,13 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
   }
 
   getFieldName(fieldId: number): string {
-    const field = this.fields.find(f => f.zFieldId === fieldId);
+    const field = this.fields.find((f) => f.zFieldId === fieldId);
     return field ? field.name : 'Unknown';
   }
 
   // Helper method to mark all controls in a form group as touched
   markFormGroupTouched(formGroup: FormGroup): void {
-    Object.values(formGroup.controls).forEach(control => {
+    Object.values(formGroup.controls).forEach((control) => {
       control.markAsTouched();
       if (control instanceof FormGroup) {
         this.markFormGroupTouched(control);
@@ -377,6 +405,6 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 }

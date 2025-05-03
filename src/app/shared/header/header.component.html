@@ -55,9 +55,10 @@
     <!-- Desktop navigation menu - simplified without dropdown -->
     <div class="hidden lg:flex lg:gap-x-12">
       <!-- Navigation links only visible to authenticated users -->
-      <ng-container *appHasRole="['Admin', 'User']">
+      <ng-container>
         <ng-container *ngFor="let item of authNavItems">
           <a
+            *appHasRole="item.roles"
             [routerLink]="item.route"
             routerLinkActive="text-pdo-green dark:text-pdo-green-light"
             [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
@@ -179,9 +180,10 @@
         <div class="-my-6 divide-y divide-gray-500/10 dark:divide-gray-700/50">
           <div class="space-y-2 py-6">
             <!-- Authenticated links -->
-            <ng-container *appHasRole="['Admin', 'User']">
+            <ng-container *appIsAuth="true">
               <ng-container *ngFor="let item of authNavItems">
                 <a
+                  *appHasRole="item.roles"
                   [id]="item.id || 'mobile-' + item.route.replace('/', '')"
                   [routerLink]="item.route"
                   routerLinkActive="text-pdo-green dark:text-pdo-green-light bg-gray-50 dark:bg-gray-700"

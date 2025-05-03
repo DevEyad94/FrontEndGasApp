@@ -13,6 +13,8 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { HasRoleDirective } from '../directives/hasRole.directive';
 import { Subject, takeUntil } from 'rxjs';
+import { Roles } from '../../core/enum/roles.enum';
+import { IsAuthDirective } from '../directives/is-auth.directive';
 
 interface NavItem {
   route: string;
@@ -22,12 +24,13 @@ interface NavItem {
   exact?: boolean;
   id?: string;
   requires_auth?: boolean;
+  roles: string[];
 }
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, TranslateModule, RouterModule, HasRoleDirective],
+  imports: [CommonModule, TranslateModule, RouterModule, HasRoleDirective, IsAuthDirective],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
@@ -48,6 +51,7 @@ export class HeaderComponent implements AfterViewInit, OnInit, OnDestroy {
       id: 'menu-dashboard',
       exact: false,
       requires_auth: true,
+      roles: [Roles.ADMIN, Roles.ENGINEER, Roles.OPERATOR],
     },
     {
       route: '/map',
@@ -55,6 +59,7 @@ export class HeaderComponent implements AfterViewInit, OnInit, OnDestroy {
       id: 'menu-map',
       exact: false,
       requires_auth: true,
+      roles: [Roles.ADMIN, Roles.ENGINEER, Roles.OPERATOR],
     },
     {
       route: '/production',
@@ -62,6 +67,7 @@ export class HeaderComponent implements AfterViewInit, OnInit, OnDestroy {
       id: 'menu-production',
       exact: false,
       requires_auth: true,
+      roles: [Roles.ADMIN, Roles.OPERATOR],
     },
     {
       route: '/maintenance',
@@ -69,9 +75,9 @@ export class HeaderComponent implements AfterViewInit, OnInit, OnDestroy {
       id: 'menu-maintenance',
       exact: false,
       requires_auth: true,
+      roles: [Roles.ADMIN, Roles.ENGINEER],
     },
   ];
-
 
   // Helper getter for authenticated navItems
   get authNavItems(): NavItem[] {

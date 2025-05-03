@@ -26,6 +26,8 @@ import { ZskSelectComponent } from '../../shared/components/zsk/zsk-select.compo
 import { Pagination } from '../../models/pagination.model';
 import { ToastService } from '../../shared/services/toast.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
+import { HasRoleDirective } from '../../shared/directives/hasRole.directive';
+import { Roles } from '../../core/enum/roles.enum';
 
 @Component({
   selector: 'app-maintenance-records',
@@ -38,13 +40,15 @@ import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/c
     DatePickerComponent,
     LabelComponent,
     ZskSelectComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    HasRoleDirective,
   ],
   templateUrl: './maintenance-records.component.html',
   styleUrls: ['./maintenance-records.component.scss'],
 })
 export class MaintenanceRecordsComponent implements OnInit, OnDestroy {
   Math = Math;
+  roleEnum = Roles;
   maintenanceRecords: FieldMaintenance[] = [];
   pagination: Pagination = {
     currentPage: 1,

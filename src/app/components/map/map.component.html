@@ -5,14 +5,38 @@
   </div>
 
   <!-- Map Filters -->
-  <app-map-filter
+  <app-map-filter *ngIf="isDataLoaded"
     [maintenanceTypes]="maintenanceTypes"
     [fields]="fieldOptions"
     (filtersChanged)="onFiltersChanged($event)">
   </app-map-filter>
 
-  <div class="bg-white dark:bg-gray-700 rounded-lg shadow overflow-hidden">
+  <div class="bg-white dark:bg-gray-700 rounded-lg shadow overflow-hidden relative">
     <div #mapContainer class="w-full h-[75vh] z-0"></div>
+
+    <!-- Custom Zoom Controls -->
+    <!-- <div class="absolute top-4 left-4 flex flex-col bg-white dark:bg-gray-800 shadow-md rounded-lg z-10">
+      <button (click)="zoomIn()" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 border-b border-gray-200 dark:border-gray-600 text-gray-700 dark:text-white" title="Zoom In">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        </svg>
+      </button>
+      <button (click)="zoomOut()" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 border-b border-gray-200 dark:border-gray-600 text-gray-700 dark:text-white" title="Zoom Out">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12H6" />
+        </svg>
+      </button>
+      <button (click)="resetZoom()" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-white" title="Reset View">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
+        </svg>
+      </button>
+    </div> -->
+
+    <!-- Zoom Level Indicator -->
+    <!-- <div class="absolute bottom-4 left-4 bg-white dark:bg-gray-800 py-1 px-3 rounded-lg shadow-md z-10 text-gray-700 dark:text-white font-medium">
+      Zoom: {{ currentZoom }}
+    </div> -->
   </div>
 
   <div class="mt-6 bg-white dark:bg-gray-700 p-4 rounded-lg shadow">

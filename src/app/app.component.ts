@@ -1,6 +1,6 @@
 import { Component, inject, PLATFORM_ID, Inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { HeaderComponent } from './shared/header/header.component';
@@ -31,7 +31,8 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private translate: TranslateService,
     @Inject(PLATFORM_ID) private platformId: Object,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {
     // Set the default language (do this first)
     this.translate.setDefaultLang('en');
@@ -53,6 +54,14 @@ export class AppComponent implements OnInit, OnDestroy {
     this.authSubscription = this.authService.currentUser$.subscribe(user => {
       this.currentUser = user || null;
       this.isLoggedIn = !!user;
+      console.log('currentUser', this.currentUser);
+      console.log('isLoggedIn', this.isLoggedIn);
+      if (!this.isLoggedIn) {
+        this.router.navigate(['/']);
+      }
+      if (this.isLoggedIn) {
+        this.router.navigate(['/dashboard']);
+      }
     });
   }
 

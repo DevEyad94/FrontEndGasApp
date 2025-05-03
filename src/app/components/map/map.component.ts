@@ -9,6 +9,7 @@ import { DashboardFilter, FieldData } from '../../models/dashboard.model';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { MaintenanceType } from '../../models/maintenance-type.model';
+import { GoogleMapsApiService } from '../../shared/services/google-maps-api.service';
 
 declare const google: any;
 
@@ -39,11 +40,16 @@ export class MapComponent implements OnInit, AfterViewInit {
   maintenanceTypes: { id: number, name: string }[] = [];
   fieldOptions: { value: number, label: string }[] = [];
   currentFilter: DashboardFilter = {};
+  isDataLoaded = false;
+
+  // Add zoom level property
+  currentZoom = 7;
 
   constructor(
     private lookupService: ZskService,
     private dashboardService: DashboardService,
-    private router: Router
+    private router: Router,
+    private googleMapsApiService: GoogleMapsApiService
   ) { }
 
   ngOnInit(): void {
@@ -56,6 +62,8 @@ export class MapComponent implements OnInit, AfterViewInit {
       maintenanceTypes: this.lookupService.getMaintenanceTypes()
     }).subscribe({
       next: (result) => {
+        console.log('Loaded maintenance types:', result.maintenanceTypes);
+
         this.fields = result.fields;
 
         // Prepare field options for the filter
@@ -70,13 +78,15 @@ export class MapComponent implements OnInit, AfterViewInit {
           name: type.name
         }));
 
+        console.log('Mapped maintenance types:', this.maintenanceTypes);
+
+        // Mark data as loaded
+        this.isDataLoaded = true;
+
         // Load dashboard data after fields are loaded
         this.loadDashboardData();
 
-        // Initialize map if available
-        if (this.mapElement) {
-          this.initializeMap();
-        }
+        // No need to initialize map here as it's handled in ngAfterViewInit
       },
       error: (error) => {
         console.error('Error loading initial data:', error);
@@ -85,22 +95,14 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // Load Google Maps script dynamically
-    if (!document.querySelector('script[src*="maps.googleapis.com/maps/api"]')) {
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.googleMapsApiKey}&callback=initMap`;
-      script.async = true;
-      script.defer = true;
-      document.head.appendChild(script);
-
-      // Define global initMap function
-      (window as any).initMap = () => {
+    // Load Google Maps API using the service
+    this.googleMapsApiService.loadApi()
+      .then(() => {
         this.initializeMap();
-      };
-    } else {
-      // If script already loaded, initialize map directly
-      this.initializeMap();
-    }
+      })
+      .catch(error => {
+        console.error('Error loading Google Maps API:', error);
+      });
   }
 
   loadDashboardData(filter: DashboardFilter = {}): void {
@@ -128,14 +130,37 @@ export class MapComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    // Make sure Google Maps API is available
+    if (!(window as any).google || !(window as any).google.maps) {
+      console.warn('Google Maps API not loaded yet, retrying...');
+      setTimeout(() => this.initializeMap(), 300);
+      return;
+    }
+
     // Default map center (can be set to average of all fields if available)
     const defaultCenter = { lat: 23.6150, lng: 58.5912 }; // Oman coordinates
 
     this.map = new google.maps.Map(this.mapElement.nativeElement, {
       center: defaultCenter,
-      zoom: 7,
+      zoom: this.currentZoom,
       mapTypeId: 'terrain',
-      styles: this.getMapStyles()
+      styles: this.getMapStyles(),
+      zoomControl: true,
+      zoomControlOptions: {
+        position: google.maps.ControlPosition.RIGHT_BOTTOM
+      },
+      fullscreenControl: true,
+      streetViewControl: false,
+      mapTypeControl: true,
+      mapTypeControlOptions: {
+        style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+        position: google.maps.ControlPosition.TOP_RIGHT
+      }
+    });
+
+    // Add zoom change listener to keep our current zoom in sync
+    this.map.addListener('zoom_changed', () => {
+      this.currentZoom = this.map.getZoom();
     });
 
     if (this.fields.length > 0 || this.dashboardFields.length > 0) {
@@ -279,5 +304,35 @@ export class MapComponent implements OnInit, AfterViewInit {
         ]
       }
     ];
+  }
+
+  zoomIn(): void {
+    if (this.map) {
+      this.currentZoom = Math.min(this.currentZoom + 1, 20);
+      this.map.setZoom(this.currentZoom);
+    }
+  }
+
+  zoomOut(): void {
+    if (this.map) {
+      this.currentZoom = Math.max(this.currentZoom - 1, 1);
+      this.map.setZoom(this.currentZoom);
+    }
+  }
+
+  resetZoom(): void {
+    if (this.map) {
+      this.currentZoom = 7;
+      this.map.setZoom(this.currentZoom);
+
+      // If we have markers, center the map to show all of them
+      if (this.markers.length > 0) {
+        const bounds = new google.maps.LatLngBounds();
+        this.markers.forEach(marker => {
+          bounds.extend(marker.getPosition());
+        });
+        this.map.fitBounds(bounds);
+      }
+    }
   }
 }

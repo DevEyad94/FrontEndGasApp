@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 import { AdminGuard } from './core/guards/admin.guard';
 import { LoginComponent } from './components/admin/login/login.component';
+import { Roles } from './core/enum/roles.enum';
 
 export const routes: Routes = [
   {
@@ -40,7 +41,8 @@ export const routes: Routes = [
       import(
         './components/production-records/production-records.component'
       ).then((m) => m.ProductionRecordsComponent),
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, AdminGuard],
+    data: { roles: [Roles.ADMIN, Roles.OPERATOR] },
     title: 'Production Records',
   },
   {
@@ -49,7 +51,8 @@ export const routes: Routes = [
       import(
         './components/maintenance-records/maintenance-records.component'
       ).then((m) => m.MaintenanceRecordsComponent),
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, AdminGuard],
+    data: { roles: [Roles.ADMIN, Roles.ENGINEER] },
     title: 'Maintenance Records',
   },
   {
