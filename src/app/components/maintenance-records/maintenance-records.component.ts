@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -16,7 +16,8 @@ import {
 } from '../../models/field-maintenance.model';
 import { GasField } from '../../models/gas-field.model';
 import { MaintenanceType } from '../../models/maintenance-type.model';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import { TextInputComponent } from '../../shared/components/text-input/text-input.component';
 import { TextAreaComponent } from '../../shared/components/text-area/text-area.component';
 import { DatePickerComponent } from '../../shared/components/date-picker/date-picker.component';
@@ -39,7 +40,7 @@ import { Pagination } from '../../core/models/pagination.model';
   templateUrl: './maintenance-records.component.html',
   styleUrls: ['./maintenance-records.component.scss'],
 })
-export class MaintenanceRecordsComponent implements OnInit {
+export class MaintenanceRecordsComponent implements OnInit, OnDestroy {
   Math = Math;
   maintenanceRecords: FieldMaintenance[] = [];
   pagination: Pagination = {
@@ -58,15 +59,16 @@ export class MaintenanceRecordsComponent implements OnInit {
   isFormVisible = false;
   isSubmitting = false;
 
-  // Pagination
-  currentPage = 1;
-  pageSize = 10;
-  totalPages = 0;
-  totalRecords = 0;
 
   // Sort
   sortColumn = 'fieldMaintenanceDate';
   sortDirection = 'desc';
+
+  private subscriptions: Subscription[] = [];
+
+  // Add property to store cached options
+  private maintenanceTypeOptions: {value: number, label: string}[] = [];
+  private fieldOptions: {value: number, label: string}[] = [];
 
   constructor(
     private gasService: GasService,
@@ -76,8 +78,14 @@ export class MaintenanceRecordsComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForms();
+
+    // First load basic options
     this.loadFilterOptions();
-    this.loadRecords();
+
+    // Load records with a small delay to give the browser time to render the UI
+    setTimeout(() => {
+      this.loadRecords();
+    }, 100);
   }
 
   initForms(): void {
@@ -100,10 +108,14 @@ export class MaintenanceRecordsComponent implements OnInit {
       maxCost: [null],
     });
 
-    this.filterForm.valueChanges.subscribe(() => {
-      this.currentPage = 1;
-      this.loadRecords();
-    });
+    const filterSubscription = this.filterForm.valueChanges
+      .pipe(debounceTime(500))
+      .subscribe(() => {
+        this.pagination.currentPage = 1;
+        this.loadRecords();
+      });
+
+    this.subscriptions.push(filterSubscription);
   }
 
   loadFilterOptions(): void {
@@ -114,6 +126,17 @@ export class MaintenanceRecordsComponent implements OnInit {
       next: (result) => {
         this.fields = result.fields;
         this.maintenanceTypes = result.maintenanceTypes;
+
+        // Cache the options immediately
+        this.maintenanceTypeOptions = this.maintenanceTypes.map((type) => ({
+          value: type.zMaintenanceTypeId,
+          label: type.name,
+        }));
+
+        this.fieldOptions = this.fields.map((field) => ({
+          value: field.zFieldId,
+          label: field.name,
+        }));
       },
       error: (error) => {
         console.error('Error fetching filter options:', error);
@@ -145,7 +168,7 @@ export class MaintenanceRecordsComponent implements OnInit {
   }
 
   onPageChange(page: number): void {
-    this.currentPage = page;
+    this.pagination.currentPage = page;
     this.loadRecords();
   }
 
@@ -161,10 +184,11 @@ export class MaintenanceRecordsComponent implements OnInit {
 
   toggleForm(isNew: boolean | null = false): void {
     this.isFormVisible = !this.isFormVisible;
-    this.resetForm();
 
-    if (isNew == true) {
-      console.log('Reset Form');
+    if (this.isFormVisible && !this.isEditMode) {
+      this.resetForm();
+    } else if (!this.isFormVisible) {
+      this.resetForm();
     }
   }
 
@@ -176,7 +200,6 @@ export class MaintenanceRecordsComponent implements OnInit {
       zMaintenanceTypeId: null,
       zFieldId: null,
     });
-    console.log(this.recordForm.value);
 
     this.isEditMode = false;
     this.selectedRecord = null;
@@ -241,7 +264,11 @@ export class MaintenanceRecordsComponent implements OnInit {
   editRecord(record: FieldMaintenance): void {
     this.isEditMode = true;
     this.selectedRecord = record;
-    this.isFormVisible = true;
+
+    // Set form visible without toggling if not already visible
+    if (!this.isFormVisible) {
+      this.isFormVisible = true;
+    }
 
     this.recordForm.patchValue({
       fieldMaintenanceGuid: record.fieldMaintenanceGuid,
@@ -303,16 +330,14 @@ export class MaintenanceRecordsComponent implements OnInit {
 
   // Helper methods for select options
   getMaintenanceTypeOptions() {
-    return this.maintenanceTypes.map((type) => ({
-      value: type.zMaintenanceTypeId,
-      label: type.name,
-    }));
+    return this.maintenanceTypeOptions;
   }
 
   getFieldOptions() {
-    return this.fields.map((field) => ({
-      value: field.zFieldId,
-      label: field.name,
-    }));
+    return this.fieldOptions;
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 }
