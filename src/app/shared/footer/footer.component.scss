@@ -1,0 +1,26 @@
+/* RTL specific styling for Arabic language */
+:host {
+  .rtl {
+    font-family: var(--font-tajawal);
+    text-align: right;
+  }
+
+  :host-context([dir="rtl"]) {
+    .text-center.md\:text-left {
+      text-align: center;
+    }
+
+    @media (min-width: 768px) {
+      .text-center.md\:text-left {
+        text-align: right !important;
+      }
+    }
+  }
+}
+
+/* Ensure Arabic numerals display correctly */
+[dir="rtl"] {
+  .text-gray-700, .text-gray-500, .text-sm {
+    unicode-bidi: embed;
+  }
+}

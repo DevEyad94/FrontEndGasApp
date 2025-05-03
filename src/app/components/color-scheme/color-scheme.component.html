@@ -1,0 +1,71 @@
+<div class="p-6 max-w-4xl mx-auto">
+  <h2 class="text-2xl font-bold mb-6">Color Scheme</h2>
+
+  <div class="mb-8">
+    <h3 class="text-xl font-semibold mb-4">Primary Colors</h3>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+      <div class="flex flex-col items-center" *ngFor="let color of primaryColors">
+        <div
+          class="w-16 h-16 rounded-full mb-2 {{ color.colorClass }} color-swatch"
+          [style.boxShadow]="'0 4px 6px rgba(0, 0, 0, 0.1)'"
+        ></div>
+        <div class="text-sm font-medium">{{ color.name }}</div>
+        <div class="text-xs text-gray-500">{{ color.hex }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-8">
+    <h3 class="text-xl font-semibold mb-4">Neutral Colors</h3>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+      <div class="flex flex-col items-center" *ngFor="let color of neutralColors">
+        <div
+          class="w-16 h-16 rounded-full mb-2 {{ color.colorClass }} color-swatch"
+          [style.boxShadow]="'0 4px 6px rgba(0, 0, 0, 0.1)'"
+        ></div>
+        <div class="text-sm font-medium">{{ color.name }}</div>
+        <div class="text-xs text-gray-500">{{ color.hex }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-8">
+    <h3 class="text-xl font-semibold mb-4">Button Examples</h3>
+    <div class="flex flex-wrap gap-4">
+      <button class="btn btn-primary">Primary Button</button>
+      <button class="btn btn-secondary">Secondary Button</button>
+      <button class="btn btn-outline-primary">Outline Primary</button>
+      <button class="btn btn-outline-secondary">Outline Secondary</button>
+    </div>
+  </div>
+
+  <div class="mb-8">
+    <h3 class="text-xl font-semibold mb-4">Gradient Examples</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="h-24 rounded-lg bg-gradient-to-tr from-pdo-green to-pdo-green-light flex items-center justify-center text-white font-medium">
+        Green Gradient
+      </div>
+      <div class="h-24 rounded-lg bg-gradient-to-tr from-pdo-red to-pdo-red-light flex items-center justify-center text-white font-medium">
+        Red Gradient
+      </div>
+      <div class="h-24 rounded-lg bg-gradient-to-tr from-pdo-green via-pdo-green-light to-pdo-white flex items-center justify-center text-pdo-black font-medium">
+        Green to White
+      </div>
+      <div class="h-24 rounded-lg bg-gradient-to-tr from-pdo-red via-pdo-red-light to-pdo-white flex items-center justify-center text-pdo-black font-medium">
+        Red to White
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-8">
+    <h3 class="text-xl font-semibold mb-4">Logo Colors</h3>
+    <div class="flex justify-center items-center p-8 bg-gray-100 rounded-lg">
+      <div class="relative w-32 h-32 logo-circle">
+        <!-- Green segments -->
+        <div class="absolute inset-0 bg-pdo-green" style="clip-path: circle(100% at center); mask-image: radial-gradient(transparent 40%, black 42%)"></div>
+        <!-- Red center -->
+        <div class="absolute inset-0 bg-pdo-red" style="clip-path: circle(40% at center);"></div>
+      </div>
+    </div>
+  </div>
+</div>

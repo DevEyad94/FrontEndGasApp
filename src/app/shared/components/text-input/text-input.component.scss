@@ -1,0 +1,104 @@
+// Container
+.relative {
+  position: relative;
+}
+
+// Input field
+.input-container {
+  cursor: text;
+  margin-bottom: 0.5rem;
+}
+
+.text-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  width: 20px;
+  height: 20px;
+  color: var(--gray-500);
+}
+
+input {
+  flex: 1;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    border-color: var(--gray-400);
+  }
+
+  &:focus {
+    border-color: var(--arabic-green);
+    box-shadow: 0 0 0 2px rgba(var(--arabic-green-rgb), 0.2);
+  }
+
+  &:disabled {
+    background-color: var(--gray-100);
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  &[type="search"] {
+    padding-left: 2.5rem;
+  }
+}
+
+// Error styling
+.border-red-500 {
+  border-color: var(--red-500) !important;
+  &:focus {
+    box-shadow: 0 0 0 2px rgba(var(--red-500-rgb), 0.2);
+  }
+}
+
+// RTL support
+:host-context([dir="rtl"]) {
+  .text-input {
+    flex-direction: row-reverse;
+  }
+
+  .input-icon {
+    left: auto;
+    right: 12px;
+  }
+
+  input[type="search"] {
+    padding-left: 0.75rem;
+    padding-right: 2.5rem;
+  }
+}
+
+// Dark mode support - using global dark mode variables
+:host-context(.dark) {
+  input {
+    background-color: var(--gray-800);
+    color: var(--gray-100);
+    border-color: var(--gray-700);
+
+    &:hover {
+      border-color: var(--gray-600);
+    }
+
+    &:focus {
+      border-color: var(--arabic-green);
+    }
+
+    &:disabled {
+      background-color: var(--gray-900);
+    }
+  }
+
+  .input-icon {
+    color: var(--gray-400);
+  }
+
+  .border-red-500 {
+    border-color: var(--red-400) !important;
+  }
+}

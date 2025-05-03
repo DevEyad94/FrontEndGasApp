@@ -1,0 +1,131 @@
+<div class="relative">
+  <!-- Date Input Field -->
+  <div class="date-input-container" (click)="toggleDatepicker($event)">
+    <div class="date-input" [ngClass]="{
+      'border-red-500': formControl?.errors
+    }">
+      <svg class="calendar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="16" y1="2" x2="16" y2="6"></line>
+        <line x1="8" y1="2" x2="8" y2="6"></line>
+        <line x1="3" y1="10" x2="21" y2="10"></line>
+      </svg>
+      <span class="date-text">{{ displayValue || (placeholder || ('DATE_PICKER.SELECT_DATE' | translate)) }}</span>
+    </div>
+  </div>
+
+  <!-- Date Picker Dropdown -->
+  <div *ngIf="showDatepicker" class="datepicker-dropdown" (click)="$event.stopPropagation()">
+    <!-- Days View -->
+    <div *ngIf="viewMode === 'days'">
+      <!-- Month Navigation -->
+      <div class="datepicker-header">
+        <button type="button" class="nav-btn" (click)="prevMonth()">
+          <span class="arrow" *ngIf="!isRtl">←</span>
+          <span class="arrow" *ngIf="isRtl">→</span>
+        </button>
+
+        <div class="current-view" (click)="switchToMonthView()">
+          {{ months[currentMonth.getMonth()] }} {{ currentMonth.getFullYear() }}
+        </div>
+
+        <button type="button" class="nav-btn" (click)="nextMonth()">
+          <span class="arrow" *ngIf="!isRtl">→</span>
+          <span class="arrow" *ngIf="isRtl">←</span>
+        </button>
+      </div>
+
+      <!-- Weekday Labels -->
+      <div class="weekday-row">
+        <div class="weekday" *ngFor="let day of weekdays">{{ day }}</div>
+      </div>
+
+      <!-- Calendar Grid -->
+      <div class="calendar-grid">
+        <div class="week" *ngFor="let week of weeks">
+          <div
+            *ngFor="let day of week"
+            class="day"
+            [class.current-month]="day.isCurrentMonth"
+            [class.other-month]="!day.isCurrentMonth"
+            [class.today]="day.isToday"
+            [class.selected]="day.isSelected"
+            (click)="selectDate(day)">
+            {{ day.day }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Month View -->
+    <div *ngIf="viewMode === 'months'">
+      <div class="datepicker-header">
+        <button type="button" class="nav-btn" (click)="prevYear()">
+          <span class="arrow" *ngIf="!isRtl">←</span>
+          <span class="arrow" *ngIf="isRtl">→</span>
+        </button>
+
+        <div class="current-view" (click)="switchToYearView()">
+          {{ currentYear }}
+        </div>
+
+        <button type="button" class="nav-btn" (click)="nextYear()">
+          <span class="arrow" *ngIf="!isRtl">→</span>
+          <span class="arrow" *ngIf="isRtl">←</span>
+        </button>
+      </div>
+
+      <div class="month-grid">
+        <div
+          *ngFor="let month of months; let i = index"
+          class="month-item"
+          [class.selected]="i === currentMonthIndex && currentYear === (selectedDate?.getFullYear() || 0)"
+          (click)="selectMonth(i)">
+          {{ month }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Year View -->
+    <div *ngIf="viewMode === 'years'">
+      <div class="datepicker-header">
+        <button type="button" class="nav-btn" (click)="prevDecade()">
+          <span class="arrow" *ngIf="!isRtl">←</span>
+          <span class="arrow" *ngIf="isRtl">→</span>
+        </button>
+
+        <div class="current-view">
+          {{ decadeStart }}-{{ decadeStart + 9 }}
+        </div>
+
+        <button type="button" class="nav-btn" (click)="nextDecade()">
+          <span class="arrow" *ngIf="!isRtl">→</span>
+          <span class="arrow" *ngIf="isRtl">←</span>
+        </button>
+      </div>
+
+      <div class="year-grid">
+        <div
+          *ngFor="let year of displayedYears"
+          class="year-item"
+          [class.selected]="year === currentYear"
+          (click)="selectYear(year)">
+          {{ year }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Actions -->
+    <div class="datepicker-footer">
+      <button type="button" class="today-btn btn-primary" (click)="setToday()">{{ 'DATE_PICKER.TODAY' | translate }}</button>
+      <button type="button" class="clear-btn btn-secondary" (click)="clearDate()">{{ 'DATE_PICKER.CLEAR' | translate }}</button>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  <div class="mt-1 text-sm text-red-600">
+    <span *ngIf="hasError('required')">
+      {{ "VALIDATION.REQUIRED" | translate }}
+    </span>
+  </div>
+</div>

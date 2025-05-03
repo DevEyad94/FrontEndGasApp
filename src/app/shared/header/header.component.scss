@@ -1,0 +1,64 @@
+/* Dropdown animation for the product flyout menu */
+#product-dropdown {
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+  opacity: 0;
+  transform: translateY(10px);
+
+  &:not(.hidden) {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile menu animation */
+#mobile-menu .fixed.inset-y-0 {
+  transition: opacity 0.3s ease-in-out;
+
+  &:not(.hidden) {
+    animation: slide-in 0.3s forwards;
+  }
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Rotate animation for dropdown chevron */
+.rotate-180 {
+  transform: rotate(180deg);
+  transition: transform 0.2s ease;
+}
+
+// Mobile menu styling
+#mobile-menu-backdrop {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+#mobile-menu:not(.hidden) {
+  #mobile-menu-backdrop {
+    opacity: 1;
+  }
+
+  .fixed.inset-y-0.right-0 {
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Mobile menu toggle styling
+#menu-toggle {
+  &:focus, &:hover {
+    outline: none;
+    color: var(--arabic-green);
+  }
+}
+
+// Make mobile menu visible for debugging (remove in production)
+.debug-mobile-menu-visible #mobile-menu {
+  display: block !important;
+}

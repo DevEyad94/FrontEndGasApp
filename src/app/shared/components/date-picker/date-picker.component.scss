@@ -1,0 +1,408 @@
+// Simplified styles using global variables from styles.scss
+
+// Container
+.relative {
+  position: relative;
+}
+
+// Input field
+.date-input-container {
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+}
+
+.date-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--gray-50);
+  color: var(--gray-900);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--gray-300);
+  font-size: 1rem;
+  width: 100%;
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: var(--gray-400);
+  }
+}
+
+.calendar-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--gray-500);
+}
+
+.date-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Dropdown calendar
+.datepicker-dropdown {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  width: 320px;
+  z-index: 50;
+  background-color: var(--gray-50);
+  border-radius: 0.75rem;
+  border: 1px solid var(--gray-300);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  font-size: 0.95rem;
+  color: var(--gray-900);
+}
+
+// Header with month navigation
+.datepicker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: var(--gray-100);
+  border-bottom: 1px solid var(--gray-300);
+  font-weight: 500;
+}
+
+.current-view {
+  font-size: 1.25rem;
+  text-align: center;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--gray-200);
+  }
+}
+
+.month-display {
+  font-size: 1.25rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+// Month grid
+.month-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+.month-item {
+  text-align: center;
+  padding: 1rem 0.5rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: var(--gray-200);
+  }
+
+  &.selected {
+    background-color: var(--arabic-green);
+    color: var(--arabic-white);
+  }
+}
+
+// Year grid
+.year-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+.year-item {
+  text-align: center;
+  padding: 1rem 0.5rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: var(--gray-200);
+  }
+
+  &.selected {
+    background-color: var(--arabic-green);
+    color: var(--arabic-white);
+  }
+}
+
+// Month and year selectors
+.month-year-selector {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.month-select, .year-select {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--gray-300);
+  background-color: var(--gray-50);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  padding-right: 2rem;
+
+  &:hover {
+    border-color: var(--gray-400);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--arabic-green);
+    box-shadow: 0 0 0 1px var(--arabic-green);
+  }
+}
+
+.month-select {
+  min-width: 110px;
+}
+
+.year-select {
+  min-width: 80px;
+}
+
+.nav-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: var(--gray-800);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--gray-200);
+  }
+}
+
+.arrow {
+  font-size: 1.25rem;
+}
+
+// Weekday labels
+.weekday-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 0.5rem 0;
+  text-align: center;
+  border-bottom: 1px solid var(--gray-300);
+}
+
+.weekday {
+  padding: 0.5rem;
+  font-weight: 500;
+  color: var(--gray-500);
+  font-size: 0.9rem;
+}
+
+// Calendar grid
+.calendar-grid {
+  padding: 0.5rem;
+}
+
+.week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.day {
+  padding: 0.5rem;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  transition: background-color 0.15s ease;
+  font-weight: 500;
+
+  &:hover {
+    background-color: var(--gray-200);
+  }
+
+  &.current-month {
+    color: var(--gray-900);
+  }
+
+  &.other-month {
+    color: var(--gray-500);
+    opacity: 0.5;
+  }
+
+  &.today {
+    background-color: var(--gray-200);
+    font-weight: 600;
+  }
+
+  &.selected {
+    background-color: var(--arabic-green);
+    color: var(--arabic-white);
+    font-weight: 600;
+  }
+}
+
+// Footer buttons
+.datepicker-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--gray-300);
+}
+
+// RTL support
+:host-context([dir="rtl"]) {
+  .date-input {
+    flex-direction: row-reverse;
+  }
+
+  .datepicker-dropdown {
+    left: auto;
+    right: 0;
+  }
+
+  .weekday-row, .week {
+    direction: rtl;
+  }
+
+  .datepicker-footer {
+    flex-direction: row-reverse;
+  }
+
+  .month-select, .year-select {
+    background-position: left 0.5rem center;
+    padding-right: 0.5rem;
+    padding-left: 2rem;
+  }
+}
+
+// Dark mode support - using global dark mode variables
+:host-context(.dark) {
+  .date-input {
+    background-color: var(--gray-800);
+    color: var(--gray-100);
+    border-color: var(--gray-700);
+  }
+
+  .calendar-icon {
+    color: var(--gray-400);
+  }
+
+  .datepicker-dropdown {
+    background-color: var(--gray-800);
+    border-color: var(--gray-700);
+    color: var(--gray-100);
+  }
+
+  .datepicker-header {
+    background-color: var(--gray-900);
+    border-color: var(--gray-700);
+  }
+
+  .nav-btn {
+    color: var(--gray-100);
+
+    &:hover {
+      background-color: var(--gray-700);
+    }
+  }
+
+  .weekday-row {
+    border-color: var(--gray-700);
+  }
+
+  .weekday {
+    color: var(--gray-400);
+  }
+
+  .day {
+    &.current-month {
+      color: var(--gray-100);
+    }
+
+    &.other-month {
+      color: var(--gray-400);
+    }
+
+    &:hover {
+      background-color: var(--gray-700);
+    }
+
+    &.today {
+      background-color: var(--gray-700);
+    }
+  }
+
+  .datepicker-footer {
+    border-color: var(--gray-700);
+  }
+
+  .month-select, .year-select {
+    background-color: var(--gray-700);
+    color: var(--gray-100);
+    border-color: var(--gray-600);
+
+    &:hover {
+      border-color: var(--gray-500);
+    }
+
+    &:focus {
+      border-color: var(--arabic-green);
+      box-shadow: 0 0 0 1px var(--arabic-green);
+    }
+  }
+
+  .current-view {
+    color: var(--gray-100);
+
+    &:hover {
+      background-color: var(--gray-700);
+    }
+  }
+
+  .month-item, .year-item {
+    color: var(--gray-100);
+
+    &:hover {
+      background-color: var(--gray-700);
+    }
+
+    &.selected {
+      background-color: var(--arabic-green);
+      color: var(--arabic-white);
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 640px) {
+  .datepicker-dropdown {
+    width: 100%;
+    min-width: 280px;
+  }
+}

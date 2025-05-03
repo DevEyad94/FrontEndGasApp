@@ -1,0 +1,46 @@
+<div class="min-h-screen flex flex-col bg-white dark:bg-gray-900">
+  <!-- Background gradients -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden">
+    <!-- Top gradient -->
+    <div class="absolute inset-x-0 top-0 transform-gpu overflow-hidden blur-3xl">
+      <div
+        class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-emerald-400 via-pdo-green-light to-pdo-black opacity-30 clip-path-gradient animate-gradient-slow bg-animate sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+      ></div>
+    </div>
+
+    <!-- Right gradient -->
+    <div class="absolute right-0 top-1/4 transform-gpu overflow-hidden blur-3xl">
+      <div
+        class="relative aspect-[1155/678] w-[20rem] bg-gradient-to-bl from-pdo-green-light via-emerald-300 to-teal-500 opacity-25 clip-path-gradient animate-gradient-slow bg-animate sm:w-[30rem]"
+      ></div>
+    </div>
+
+    <!-- Bottom gradient -->
+    <div class="absolute inset-x-0 bottom-0 transform-gpu overflow-hidden blur-3xl">
+      <div
+        class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-pdo-black via-pdo-green to-emerald-400 opacity-30 clip-path-gradient animate-gradient-slow bg-animate sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
+      ></div>
+    </div>
+
+    <!-- Left gradient -->
+    <div class="absolute left-0 bottom-1/4 transform-gpu overflow-hidden blur-3xl">
+      <div
+        class="relative aspect-[1155/678] w-[20rem] bg-gradient-to-tr from-teal-500 via-pdo-green to-emerald-300 opacity-25 clip-path-gradient animate-gradient-slow bg-animate sm:w-[30rem]"
+      ></div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="relative flex flex-col flex-grow">
+    <!-- Header -->
+    <app-header></app-header>
+
+    <!-- Main content -->
+    <main class="flex-grow pt-16 text-gray-900 dark:text-gray-100">
+      <router-outlet />
+    </main>
+
+    <!-- Footer -->
+    <app-footer></app-footer>
+  </div>
+</div>

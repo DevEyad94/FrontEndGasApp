@@ -1,0 +1,36 @@
+/* Custom styles for login component */
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Enhance focus states for accessibility */
+input:focus,
+button:focus {
+  outline: 2px solid rgba(99, 102, 241, 0.6);
+  outline-offset: 2px;
+}
+
+/* Custom transition effect */
+button,
+a {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Responsive image handling */
+.bg-indigo-50 img {
+  max-height: 80vh;
+}

@@ -1,0 +1,108 @@
+<!--
+  Available Angular form validation error types:
+  - required: Field is mandatory
+  - minlength: Text is shorter than required minimum length
+  - maxlength: Text exceeds maximum allowed length
+  - email: Invalid email format
+  - pattern: Text doesn't match required pattern
+  - min: Value is less than minimum
+  - max: Value exceeds maximum
+
+  Usage example:
+  <app-text-input
+    formControlName="email"
+    [label]="'Email'"
+    [required]="true"
+    [formControl]="form.get('email')"
+    [showError]="submitted && !!form.get('email')?.errors"
+  ></app-text-input>
+-->
+
+<div class="relative">
+  <!-- Input Label -->
+  <app-label [label]="label" [required]="required" [for]="id"></app-label>
+
+  <!-- Text Input Container -->
+  <div class="input-container">
+    <div class="text-input">
+      <!-- Text input icon can be added here if needed -->
+      <svg
+        *ngIf="type === 'search'"
+        class="input-icon"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+
+      <input
+        [type]="type"
+        [id]="id"
+        [name]="name"
+        [placeholder]="placeholder | translate"
+        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-pdo-green focus:border-pdo-green dark:bg-gray-700 dark:text-white"
+        [ngClass]="{
+          'border-red-500': formControl?.errors
+        }"
+        (input)="onInputChange($event)"
+        (blur)="onTouched()"
+        [formControl]="formControl"
+      />
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="formControl" class="mt-1 text-sm text-red-600">
+    <!-- Required validation -->
+
+    <span *ngIf="formControl?.errors?.['required']">
+      {{ "VALIDATION.REQUIRED" | translate }}
+    </span>
+
+    <!-- Min length validation -->
+    <span *ngIf="formControl?.errors?.['minlength']">
+      {{ "VALIDATION.MIN_LENGTH" | translate: { requiredLength: formControl?.errors?.['minlength']?.requiredLength } }}
+    </span>
+
+    <!-- Max length validation -->
+    <span *ngIf="formControl?.errors?.['maxlength']">
+      {{ "VALIDATION.MAX_LENGTH" | translate: { requiredLength: formControl?.errors?.['maxlength']?.requiredLength } }}
+    </span>
+
+    <!-- Email validation -->
+    <span *ngIf="formControl?.errors?.['email']">
+      {{ "VALIDATION.EMAIL" | translate }}
+    </span>
+
+    <!-- Pattern validation -->
+    <span *ngIf="formControl?.errors?.['pattern']">
+      {{ "VALIDATION.PATTERN" | translate }}
+    </span>
+
+    <!-- Min validation -->
+    <span *ngIf="formControl?.errors?.['min']">
+      {{ "VALIDATION.MIN" | translate: { min: formControl?.errors?.['min']?.min } }}
+    </span>
+
+    <!-- Max validation -->
+    <span *ngIf="formControl?.errors?.['max']">
+      {{ "VALIDATION.MAX" | translate: { max: formControl?.errors?.['max']?.max } }}
+    </span>
+
+    <!-- Custom validation - use custom error message if none of the above -->
+    <span
+      *ngIf="errorMessage && !formControl?.errors?.['required'] &&
+                !formControl?.errors?.['minlength'] && !formControl?.errors?.['maxlength'] &&
+                !formControl?.errors?.['email'] && !formControl?.errors?.['pattern'] &&
+                !formControl?.errors?.['min'] && !formControl?.errors?.['max']"
+    >
+      {{ errorMessage | translate }}
+    </span>
+  </div>
+</div>

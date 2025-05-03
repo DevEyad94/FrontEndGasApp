@@ -1,0 +1,75 @@
+<!--
+  Available Angular form validation error types:
+  - required: Field is mandatory
+  - minlength: Text is shorter than required minimum length
+  - maxlength: Text exceeds maximum allowed length
+  - pattern: Text doesn't match required pattern
+
+  Usage example:
+  <app-text-area
+    formControlName="description"
+    [label]="'Description'"
+    [rows]="4"
+    [required]="true"
+    [formControl]="form.get('description')"
+    [showError]="submitted && !!form.get('description')?.errors"
+  ></app-text-area>
+-->
+
+<div class="relative">
+  <!-- Text Area Label -->
+  <app-label [label]="label" [required]="required" [for]="id"></app-label>
+
+  <!-- Text Area Container -->
+  <div class="textarea-container">
+    <div class="text-area">
+      <textarea
+        [id]="id"
+        [name]="name"
+        [rows]="rows"
+        [cols]="cols"
+        [maxlength]="maxLength"
+        [placeholder]="placeholder | translate"
+        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-pdo-green focus:border-pdo-green dark:bg-gray-700 dark:text-white"
+        [ngClass]="{
+          'border-red-500': formControl?.errors
+        }"
+        (input)="onTextareaChange($event)"
+        (blur)="onTouched()"
+        [formControl]="formControl"
+      ></textarea>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="formControl" class="mt-1 text-sm text-red-600">
+    <!-- Required validation -->
+    <span *ngIf="formControl?.errors?.['required']">
+      {{ "VALIDATION.REQUIRED" | translate }}
+    </span>
+
+    <!-- Min length validation -->
+    <span *ngIf="formControl?.errors?.['minlength']">
+      {{ "VALIDATION.MIN_LENGTH" | translate: { requiredLength: formControl?.errors?.['minlength']?.requiredLength } }}
+    </span>
+
+    <!-- Max length validation -->
+    <span *ngIf="formControl?.errors?.['maxlength']">
+      {{ "VALIDATION.MAX_LENGTH" | translate: { requiredLength: formControl?.errors?.['maxlength']?.requiredLength } }}
+    </span>
+
+    <!-- Pattern validation -->
+    <span *ngIf="formControl?.errors?.['pattern']">
+      {{ "VALIDATION.PATTERN" | translate }}
+    </span>
+
+    <!-- Custom validation - use custom error message if none of the above -->
+    <span
+      *ngIf="errorMessage && !formControl?.errors?.['required'] &&
+                !formControl?.errors?.['minlength'] && !formControl?.errors?.['maxlength'] &&
+                !formControl?.errors?.['pattern']"
+    >
+      {{ errorMessage | translate }}
+    </span>
+  </div>
+</div>

@@ -1,0 +1,21 @@
+// Add custom styles for the color scheme component if needed
+.color-swatch {
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+// Logo representation styling
+.logo-circle {
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+// Add responsive adjustments
+@media (max-width: 768px) {
+  .grid {
+    gap: 1rem !important;
+  }
+}
