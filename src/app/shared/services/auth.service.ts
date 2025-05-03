@@ -6,7 +6,7 @@ import { environment } from '../../../environments/environment';
 import { isPlatformBrowser } from '@angular/common';
 import {
   GenericResponse
-} from '../../core/models/user.model';
+} from '../../models/generic.model';
 import { Router } from '@angular/router';
 import { User, UserLoginDto } from '../../models/user.model';
 @Injectable({

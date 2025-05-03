@@ -22,7 +22,7 @@ import { TextAreaComponent } from '../../shared/components/text-area/text-area.c
 import { DatePickerComponent } from '../../shared/components/date-picker/date-picker.component';
 import { LabelComponent } from '../../shared/components/label/label.component';
 import { ZskSelectComponent } from '../../shared/components/zsk/zsk-select.component';
-import { Pagination } from '../../core/models/pagination.model';
+import { Pagination } from '../../models/pagination.model';
 import { ToastService } from '../../shared/services/toast.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 

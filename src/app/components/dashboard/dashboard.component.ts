@@ -1,107 +1,105 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Chart, registerables } from 'chart.js';
 import { forkJoin } from 'rxjs';
-import { GasService } from '../../shared/services/gas.service';
 import { ZskService } from '../../shared/services/zsk.service';
-import { GasField } from '../../models/gas-field.model';
 import { MaintenanceType } from '../../models/maintenance-type.model';
-import { ProductionRecord } from '../../models/production-record.model';
-import { FieldMaintenance } from '../../models/field-maintenance.model';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-
-Chart.register(...registerables);
+import { DashboardService } from '../../shared/services/dashboard.service';
+import { DashboardFilter, DashboardResponse } from '../../models/dashboard.model';
+import { NgxEchartsModule } from 'ngx-echarts';
+import type { EChartsOption } from 'echarts';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, NgxEchartsModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
   filterForm!: FormGroup;
-  fields: GasField[] = [];
   maintenanceTypes: MaintenanceType[] = [];
-  productionChart: any;
-  maintenanceCostChart: any;
-  fieldDistributionChart: any;
 
+  // Dashboard data
+  dashboardData?: DashboardResponse;
+
+  // ECharts options
+  productionChartOption: EChartsOption = {};
+  maintenanceCostChartOption: EChartsOption = {};
+  fieldDistributionChartOption: EChartsOption = {};
+
+  // Stats
   totalProductionRate: number = 0;
   totalMaintenanceCost: number = 0;
   fieldCount: number = 0;
 
-  // Dashboard data
-  productionRecords: ProductionRecord[] = [];
-  maintenanceRecords: FieldMaintenance[] = [];
-
   constructor(
-    private gasService: GasService,
-    private lookupService: ZskService,
+    private dashboardService: DashboardService,
+    private zskService: ZskService,
     private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
+    // Initialize form first
     this.initFilterForm();
+
+    // Load maintenance types for filter options
     this.loadFilterOptions();
-    this.loadDashboardData();
+
+    // Load initial dashboard data
+    setTimeout(() => {
+      this.loadDashboardData();
+    });
   }
 
   initFilterForm(): void {
     this.filterForm = this.fb.group({
-      productionRate: [null],
-      year: [new Date().getFullYear()],
-      maintenanceType: [null],
-      cost: [null]
+      minProductionRate: [null],
+      maxProductionRate: [null],
+      extractionYear: [new Date().getFullYear()],
+      fromYear: [null],
+      toYear: [null],
+      maintenanceTypeId: [null],
+      minCost: [null],
+      maxCost: [null]
     });
 
+    // Subscribe to form changes to reload data when filters change
     this.filterForm.valueChanges.subscribe(() => {
       this.loadDashboardData();
     });
   }
 
   loadFilterOptions(): void {
-    forkJoin({
-      fields: this.lookupService.getFields(),
-      maintenanceTypes: this.lookupService.getMaintenanceTypes()
-    }).subscribe(result => {
-      this.fields = result.fields;
-      this.maintenanceTypes = result.maintenanceTypes;
-      this.fieldCount = this.fields.length;
+    this.zskService.getMaintenanceTypes().subscribe(result => {
+      this.maintenanceTypes = result;
     });
   }
 
   loadDashboardData(): void {
-    const filters = this.filterForm.value;
-    const productionFilter = {
-      year: filters.year,
-      minProductionRate: filters.productionRate ? filters.productionRate : undefined
-    };
+    // Make sure to have a filter object even if form is not initialized
+    const filter: DashboardFilter = this.filterForm?.value || {};
 
-    const maintenanceFilter = {
-      zMaintenanceTypeId: filters.maintenanceType,
-      minCost: filters.cost
-    };
-
-    forkJoin({
-      production: this.gasService.getProductionRecordsWithFilter(productionFilter, 1, 100),
-      maintenance: this.gasService.getFieldMaintenancesWithFilter(maintenanceFilter, 1, 100)
-    }).subscribe(result => {
-      // this.productionRecords = result.production.data.result;
-      // this.maintenanceRecords = result.maintenance.data.result;
-
-      this.calculateTotals();
-      this.renderCharts();
+    // Make API call
+    this.dashboardService.getDashboardData(filter).subscribe({
+      next: (data) => {
+        this.dashboardData = data;
+        this.updateStats();
+        this.renderCharts();
+      },
+      error: (error) => {
+        console.error('Error loading dashboard data:', error);
+      }
     });
   }
 
-  calculateTotals(): void {
-    this.totalProductionRate = this.productionRecords.reduce((sum, record) =>
-      sum + record.productionRate, 0);
-
-    this.totalMaintenanceCost = this.maintenanceRecords.reduce((sum, record) =>
-      sum + record.cost, 0);
+  updateStats(): void {
+    if (this.dashboardData) {
+      this.totalProductionRate = this.dashboardData.totalProductionRate;
+      this.totalMaintenanceCost = this.dashboardData.totalMaintenanceCost;
+      this.fieldCount = this.dashboardData.fieldData.length;
+    }
   }
 
   renderCharts(): void {
@@ -111,149 +109,141 @@ export class DashboardComponent implements OnInit {
   }
 
   renderProductionChart(): void {
-    const ctx = document.getElementById('productionChart') as HTMLCanvasElement;
+    if (!this.dashboardData?.productionRateChart) return;
 
-    if (this.productionChart) {
-      this.productionChart.destroy();
-    }
+    const data = this.dashboardData.productionRateChart;
 
-    // Group by field and sum production rates
-    const fieldProductionData: {[key: string]: number} = {};
-    this.productionRecords.forEach(record => {
-      if (!fieldProductionData[record.fieldName]) {
-        fieldProductionData[record.fieldName] = 0;
-      }
-      fieldProductionData[record.fieldName] += record.productionRate;
-    });
-
-    const labels = Object.keys(fieldProductionData);
-    const data = Object.values(fieldProductionData);
-
-    this.productionChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Production Rate by Field',
-          data: data,
-          backgroundColor: 'rgba(54, 162, 235, 0.5)',
-          borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 1
-        }]
+    this.productionChartOption = {
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow'
+        }
       },
-      options: {
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true,
-            title: {
-              display: true,
-              text: 'Production Rate'
-            }
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      xAxis: {
+        type: 'category',
+        data: data.map(item => item.period),
+        axisLabel: {
+          rotate: 45
+        }
+      },
+      yAxis: {
+        type: 'value',
+        name: 'Production Rate'
+      },
+      series: [
+        {
+          name: 'Production Rate',
+          type: 'bar',
+          data: data.map(item => item.productionRate),
+          itemStyle: {
+            color: '#3AA1FF'
           }
         }
-      }
-    });
+      ]
+    };
   }
 
   renderMaintenanceCostChart(): void {
-    const ctx = document.getElementById('maintenanceCostChart') as HTMLCanvasElement;
+    if (!this.dashboardData?.maintenanceCostChart) return;
 
-    if (this.maintenanceCostChart) {
-      this.maintenanceCostChart.destroy();
-    }
+    const data = this.dashboardData.maintenanceCostChart;
 
-    // Group by maintenance type and sum costs
-    const maintenanceCostData: {[key: string]: number} = {};
-    this.maintenanceRecords.forEach(record => {
-      if (!maintenanceCostData[record.maintenanceTypeName]) {
-        maintenanceCostData[record.maintenanceTypeName] = 0;
-      }
-      maintenanceCostData[record.maintenanceTypeName] += record.cost;
-    });
-
-    const labels = Object.keys(maintenanceCostData);
-    const data = Object.values(maintenanceCostData);
-
-    this.maintenanceCostChart = new Chart(ctx, {
-      type: 'pie',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Maintenance Cost by Type',
-          data: data,
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.5)',
-            'rgba(54, 162, 235, 0.5)',
-            'rgba(255, 206, 86, 0.5)',
-            'rgba(75, 192, 192, 0.5)',
-            'rgba(153, 102, 255, 0.5)'
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)'
-          ],
-          borderWidth: 1
-        }]
+    this.maintenanceCostChartOption = {
+      tooltip: {
+        trigger: 'axis',
+        formatter: '{a} <br/>{b}: ${c}'
       },
-      options: {
-        responsive: true
-      }
-    });
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      xAxis: {
+        type: 'category',
+        data: data.map(item => item.period),
+        axisLabel: {
+          rotate: 45
+        }
+      },
+      yAxis: {
+        type: 'value',
+        name: 'Maintenance Cost ($)'
+      },
+      series: [
+        {
+          name: 'Maintenance Cost',
+          type: 'line',
+          data: data.map(item => item.cost),
+          itemStyle: {
+            color: '#FF5722'
+          },
+          areaStyle: {
+            color: {
+              type: 'linear',
+              x: 0,
+              y: 0,
+              x2: 0,
+              y2: 1,
+              colorStops: [
+                {
+                  offset: 0,
+                  color: 'rgba(255, 87, 34, 0.7)'
+                },
+                {
+                  offset: 1,
+                  color: 'rgba(255, 87, 34, 0.1)'
+                }
+              ]
+            }
+          }
+        }
+      ]
+    };
   }
 
   renderFieldDistributionChart(): void {
-    const ctx = document.getElementById('fieldDistributionChart') as HTMLCanvasElement;
+    if (!this.dashboardData?.regionDistribution) return;
 
-    if (this.fieldDistributionChart) {
-      this.fieldDistributionChart.destroy();
-    }
+    const data = this.dashboardData.regionDistribution;
 
-    // Count maintenance records by field
-    const fieldDistributionData: {[key: string]: number} = {};
-    this.fields.forEach(field => {
-      fieldDistributionData[field.name] = 0;
-    });
-
-    this.maintenanceRecords.forEach(record => {
-      if (fieldDistributionData[record.fieldName] !== undefined) {
-        fieldDistributionData[record.fieldName]++;
-      }
-    });
-
-    const labels = Object.keys(fieldDistributionData);
-    const data = Object.values(fieldDistributionData);
-
-    this.fieldDistributionChart = new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Maintenance Records by Field',
-          data: data,
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.5)',
-            'rgba(54, 162, 235, 0.5)',
-            'rgba(255, 206, 86, 0.5)',
-            'rgba(75, 192, 192, 0.5)',
-            'rgba(153, 102, 255, 0.5)'
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)'
-          ],
-          borderWidth: 1
-        }]
+    this.fieldDistributionChartOption = {
+      tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b}: {c} fields ({d}%)'
       },
-      options: {
-        responsive: true
-      }
-    });
+      legend: {
+        orient: 'vertical',
+        right: 10,
+        top: 'center',
+        data: data.map(item => item.regionName)
+      },
+      series: [
+        {
+          name: 'Region Distribution',
+          type: 'pie',
+          radius: '55%',
+          center: ['40%', '50%'],
+          data: data.map(item => ({
+            name: item.regionName,
+            value: item.fieldCount
+          })),
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
+        }
+      ]
+    };
   }
 }

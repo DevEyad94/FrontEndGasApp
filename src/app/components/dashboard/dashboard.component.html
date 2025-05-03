@@ -8,11 +8,11 @@
       <form [formGroup]="filterForm" class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Production Rate
+            Min Production Rate
           </label>
           <input
             type="number"
-            formControlName="productionRate"
+            formControlName="minProductionRate"
             placeholder="Minimum rate"
             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
           >
@@ -20,11 +20,45 @@
 
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Year of Extraction
+            Max Production Rate
           </label>
           <input
             type="number"
-            formControlName="year"
+            formControlName="maxProductionRate"
+            placeholder="Maximum rate"
+            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+          >
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Extraction Year
+          </label>
+          <input
+            type="number"
+            formControlName="extractionYear"
+            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+          >
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            From Year
+          </label>
+          <input
+            type="number"
+            formControlName="fromYear"
+            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+          >
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            To Year
+          </label>
+          <input
+            type="number"
+            formControlName="toYear"
             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
           >
         </div>
@@ -34,7 +68,7 @@
             Maintenance Type
           </label>
           <select
-            formControlName="maintenanceType"
+            formControlName="maintenanceTypeId"
             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
           >
             <option [ngValue]="null">All Types</option>
@@ -46,12 +80,24 @@
 
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Minimum Cost
+            Min Cost
           </label>
           <input
             type="number"
-            formControlName="cost"
+            formControlName="minCost"
             placeholder="Minimum cost"
+            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+          >
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Max Cost
+          </label>
+          <input
+            type="number"
+            formControlName="maxCost"
+            placeholder="Maximum cost"
             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
           >
         </div>
@@ -80,24 +126,72 @@
   <!-- Charts -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
     <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow">
-      <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Production Rate by Field</h3>
+      <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Production Rate by Period</h3>
       <div class="h-80">
-        <canvas id="productionChart"></canvas>
+        <div
+          echarts
+          [options]="productionChartOption"
+          class="h-full w-full"
+          theme="dark"
+        ></div>
       </div>
     </div>
 
     <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow">
-      <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Maintenance Cost by Type</h3>
+      <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Maintenance Cost by Period</h3>
       <div class="h-80">
-        <canvas id="maintenanceCostChart"></canvas>
+        <div
+          echarts
+          [options]="maintenanceCostChartOption"
+          class="h-full w-full"
+          theme="dark"
+        ></div>
       </div>
     </div>
   </div>
 
   <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow mb-8">
-    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Field Distribution</h3>
+    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Region Distribution</h3>
     <div class="h-80">
-      <canvas id="fieldDistributionChart"></canvas>
+      <div
+        echarts
+        [options]="fieldDistributionChartOption"
+        class="h-full w-full"
+        theme="dark"
+      ></div>
+    </div>
+  </div>
+
+  <!-- Field Data Table -->
+  <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow mb-8">
+    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Field Data</h3>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
+        <thead class="bg-gray-50 dark:bg-gray-800">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Field Name</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Production Rate</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Extraction Year</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Maintenance Type</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Maintenance Cost</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Last Maintenance</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white dark:bg-gray-700 divide-y divide-gray-200 dark:divide-gray-600">
+          <tr *ngFor="let field of dashboardData?.fieldData" class="hover:bg-gray-100 dark:hover:bg-gray-600">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{{ field.fieldName }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ field.productionRate | number }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ field.extractionYear }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ field.maintenanceType }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">${{ field.maintenanceCost | number:'1.2-2' }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ field.lastMaintenanceDate | date:'medium' }}</td>
+          </tr>
+          <tr *ngIf="!dashboardData?.fieldData?.length" class="hover:bg-gray-100 dark:hover:bg-gray-600">
+            <td colspan="6" class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500 dark:text-gray-300">No field data available</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

@@ -31,6 +31,7 @@ import { ToastService } from './shared/services/toast.service';
 import { filter } from 'rxjs/operators';
 import { CustomTitleStrategy } from './shared/services/title.strategy';
 import { AuthService } from './shared/services/auth.service';
+import { NgxEchartsModule } from 'ngx-echarts';
 
 // Register locale data
 registerLocaleData(localeEn);
@@ -111,6 +112,9 @@ export const appConfig: ApplicationConfig = {
           deps: [HttpClient],
         },
         defaultLanguage: 'en',
+      }),
+      NgxEchartsModule.forRoot({
+        echarts: () => import('echarts')
       })
     ),
   ],

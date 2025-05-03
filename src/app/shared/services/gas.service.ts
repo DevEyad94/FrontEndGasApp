@@ -18,7 +18,7 @@ import {
 import {
   GenericResponse,
   PaginatedResult,
-} from '../../core/models/pagination.model';
+} from '../../models/pagination.model';
 
 @Injectable({
   providedIn: 'root',
