@@ -5,8 +5,6 @@
         class="mb-4 md:mb-0">
         <p class="text-gray-700 dark:text-gray-300 mb-2" [class.rtl]="isArabic" [dir]="isArabic ? 'rtl' : 'ltr'">{{
           'FOOTER.COPYRIGHT' | translate }}</p>
-        <p class="text-sm text-gray-500 dark:text-gray-400" [class.rtl]="isArabic" [dir]="isArabic ? 'rtl' : 'ltr'">{{
-          'FOOTER.TAGLINE' | translate }}</p>
         <p class="text-xs text-gray-400 mt-1" [class.rtl]="isArabic" [dir]="isArabic ? 'rtl' : 'ltr'">
           Version: {{ version }}
         </p>
@@ -29,20 +27,6 @@
           </svg>
         </a>
       </div> -->
-    </div>
-
-    <div class="mt-8 border-t border-gray-200 dark:border-gray-800 pt-6">
-      <div class="flex flex-wrap justify-center md:justify-between gap-4" [class.flex-row-reverse]="isArabic">
-        <div class="flex gap-4 text-sm text-gray-600 dark:text-gray-400">
-          <!-- <a href="#" class="hover:text-pdo-green dark:hover:text-pdo-green">{{ 'FOOTER.PRIVACY' | translate }}</a>
-          <a href="#" class="hover:text-pdo-green dark:hover:text-pdo-green">{{ 'FOOTER.TERMS' | translate }}</a>
-          <a href="#" class="hover:text-pdo-green dark:hover:text-pdo-green">{{ 'FOOTER.CONTACT' | translate }}</a> -->
-        </div>
-
-        <div class="text-sm text-gray-500 dark:text-gray-500" [class.rtl]="isArabic" [dir]="isArabic ? 'rtl' : 'ltr'">
-          {{ 'FOOTER.DESIGNED_WITH' | translate }}
-        </div>
-      </div>
     </div>
   </div>
 </footer>

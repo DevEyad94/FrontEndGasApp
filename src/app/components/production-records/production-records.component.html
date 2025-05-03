@@ -1,27 +1,38 @@
 <div class="p-4 bg-gray-50 dark:bg-gray-800 min-h-screen">
   <div class="mb-6 flex justify-between items-center">
     <div>
-      <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Production Records</h1>
-      <p class="mt-1 text-gray-600 dark:text-gray-300">Manage gas condensate production records</p>
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+        Production Records
+      </h1>
+      <p class="mt-1 text-gray-600 dark:text-gray-300">
+        Manage gas condensate production records
+      </p>
     </div>
     <div>
       <button
         (click)="toggleForm()"
         class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
       >
-        {{ isFormVisible ? 'Cancel' : 'Add New Record' }}
+        {{ isFormVisible ? "Cancel" : "Add New Record" }}
       </button>
     </div>
   </div>
 
   <!-- Form Section -->
-  <div *ngIf="isFormVisible" class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow mb-6">
+  <div
+    *ngIf="isFormVisible"
+    class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow mb-6"
+  >
     <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
-      {{ isEditMode ? 'Edit Production Record' : 'Add Production Record' }}
+      {{ isEditMode ? "Edit Production Record" : "Add Production Record" }}
     </h2>
 
-    <form [formGroup]="recordForm" (ngSubmit)="onSubmit()" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <input type="hidden" formControlName="productionRecordGuid">
+    <form
+      [formGroup]="recordForm"
+      (ngSubmit)="onSubmit()"
+      class="grid grid-cols-1 md:grid-cols-2 gap-6"
+    >
+      <input type="hidden" formControlName="productionRecordGuid" />
 
       <div>
         <app-label [label]="'Date of Production'" [required]="true"></app-label>
@@ -84,7 +95,7 @@
           [disabled]="recordForm.invalid || isSubmitting"
           class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
         >
-          {{ isSubmitting ? 'Saving...' : (isEditMode ? 'Update' : 'Save') }}
+          {{ isSubmitting ? "Saving..." : isEditMode ? "Update" : "Save" }}
         </button>
       </div>
     </form>
@@ -92,9 +103,14 @@
 
   <!-- Filter Section -->
   <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow mb-6">
-    <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Filter Records</h2>
+    <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">
+      Filter Records
+    </h2>
 
-    <form [formGroup]="filterForm" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+    <form
+      [formGroup]="filterForm"
+      class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4"
+    >
       <div>
         <app-text-input
           [label]="'Search'"
@@ -148,94 +164,112 @@
     </form>
   </div>
 
-  <!-- File Import Section -->
-  <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow mb-6">
-    <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Import Records</h2>
-
-    <div class="flex items-center gap-4">
-      <div class="flex-grow">
-        <input
-          type="file"
-          id="fileInput"
-          accept=".csv"
-          (change)="onFileSelected($event)"
-          class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:text-gray-300 dark:file:bg-gray-600 dark:file:text-gray-100"
-        >
-      </div>
-      <button
-        (click)="uploadFile()"
-        [disabled]="!selectedFile || isLoading"
-        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
-      >
-        Import
-      </button>
-    </div>
-
-    <div *ngIf="importMessage" class="mt-2 text-sm" [ngClass]="{'text-green-600 dark:text-green-400': importMessage.includes('Successfully'), 'text-red-600 dark:text-red-400': importMessage.includes('Error')}">
-      {{ importMessage }}
-    </div>
-  </div>
-
   <!-- Records Table -->
   <div class="bg-white dark:bg-gray-700 rounded-lg shadow overflow-hidden">
     <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
         <thead class="bg-gray-50 dark:bg-gray-800">
           <tr>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer" (click)="onSort('dateOfProduction')">
+            <th
+              scope="col"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
+              (click)="onSort('dateOfProduction')"
+            >
               Date
               <span *ngIf="sortColumn === 'dateOfProduction'" class="ml-1">
-                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                {{ sortDirection === "asc" ? "↑" : "↓" }}
               </span>
             </th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer" (click)="onSort('fieldName')">
+            <th
+              scope="col"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
+              (click)="onSort('fieldName')"
+            >
               Field
               <span *ngIf="sortColumn === 'fieldName'" class="ml-1">
-                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                {{ sortDirection === "asc" ? "↑" : "↓" }}
               </span>
             </th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer" (click)="onSort('productionRate')">
+            <th
+              scope="col"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
+              (click)="onSort('productionRate')"
+            >
               Production Rate
               <span *ngIf="sortColumn === 'productionRate'" class="ml-1">
-                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                {{ sortDirection === "asc" ? "↑" : "↓" }}
               </span>
             </th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer" (click)="onSort('productionOfCost')">
+            <th
+              scope="col"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer"
+              (click)="onSort('productionOfCost')"
+            >
               Cost
               <span *ngIf="sortColumn === 'productionOfCost'" class="ml-1">
-                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                {{ sortDirection === "asc" ? "↑" : "↓" }}
               </span>
             </th>
-            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+            <th
+              scope="col"
+              class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+            >
               Actions
             </th>
           </tr>
         </thead>
-        <tbody class="bg-white dark:bg-gray-700 divide-y divide-gray-200 dark:divide-gray-600">
+        <tbody
+          class="bg-white dark:bg-gray-700 divide-y divide-gray-200 dark:divide-gray-600"
+        >
           <tr *ngIf="isLoading" class="animate-pulse">
-            <td colspan="5" class="px-6 py-4 whitespace-nowrap text-center text-gray-500 dark:text-gray-300">
+            <td
+              colspan="5"
+              class="px-6 py-4 whitespace-nowrap text-center text-gray-500 dark:text-gray-300"
+            >
               Loading...
             </td>
           </tr>
-          <tr *ngIf="!isLoading && (!productionRecords || productionRecords.length === 0)" class="hover:bg-gray-100 dark:hover:bg-gray-600">
-            <td colspan="5" class="px-6 py-4 whitespace-nowrap text-center text-gray-500 dark:text-gray-300">
+          <tr
+            *ngIf="
+              !isLoading &&
+              (!productionRecords || productionRecords.length === 0)
+            "
+            class="hover:bg-gray-100 dark:hover:bg-gray-600"
+          >
+            <td
+              colspan="5"
+              class="px-6 py-4 whitespace-nowrap text-center text-gray-500 dark:text-gray-300"
+            >
               No records found
             </td>
           </tr>
-          <tr *ngFor="let record of productionRecords" class="hover:bg-gray-100 dark:hover:bg-gray-600">
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-              {{ record.dateOfProduction | date:'MMM d, yyyy' }}
+          <tr
+            *ngFor="let record of productionRecords"
+            class="hover:bg-gray-100 dark:hover:bg-gray-600"
+          >
+            <td
+              class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300"
+            >
+              {{ record.dateOfProduction | date : "MMM d, yyyy" }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+            <td
+              class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white"
+            >
               {{ record.fieldName }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+            <td
+              class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300"
+            >
               {{ record.productionRate }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-              ${{ record.productionOfCost | number:'1.2-2' }}
+            <td
+              class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300"
+            >
+              ${{ record.productionOfCost | number : "1.2-2" }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-right space-x-1">
+            <td
+              class="px-6 py-4 whitespace-nowrap text-sm text-right space-x-1"
+            >
               <button
                 (click)="editRecord(record)"
                 class="px-3 py-1.5 text-xs bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
@@ -255,11 +289,22 @@
     </div>
 
     <!-- Pagination -->
-    <div class="px-6 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-600">
+    <div
+      class="px-6 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-600"
+    >
       <div class="text-sm text-gray-700 dark:text-gray-300">
-        Showing <span class="font-medium">{{ (pagination.currentPage - 1) * pagination.itemsPerPage + 1 }}</span> to
-        <span class="font-medium">{{ Math.min(pagination.currentPage * pagination.itemsPerPage, pagination.totalItems) }}</span> of
-        <span class="font-medium">{{ pagination.totalItems }}</span> results
+        Showing
+        <span class="font-medium">{{
+          (pagination.currentPage - 1) * pagination.itemsPerPage + 1
+        }}</span>
+        to
+        <span class="font-medium">{{
+          Math.min(
+            pagination.currentPage * pagination.itemsPerPage,
+            pagination.totalItems
+          )
+        }}</span>
+        of <span class="font-medium">{{ pagination.totalItems }}</span> results
       </div>
       <div class="flex space-x-2">
         <button
@@ -284,7 +329,13 @@
   <app-confirm-dialog
     [visible]="showDeleteConfirmation"
     [title]="'Confirm Delete'"
-    [message]="recordToDelete ? 'Are you sure you want to delete the production record for ' + recordToDelete.fieldName + '?' : 'Are you sure you want to delete this record?'"
+    [message]="
+      recordToDelete
+        ? 'Are you sure you want to delete the production record for ' +
+          recordToDelete.fieldName +
+          '?'
+        : 'Are you sure you want to delete this record?'
+    "
     [confirmText]="'Delete'"
     [cancelText]="'Cancel'"
     (confirm)="onConfirmDelete()"

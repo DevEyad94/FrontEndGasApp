@@ -39,7 +39,6 @@ export class DashboardComponent implements OnInit {
   // ECharts options
   productionChartOption: EChartsOption = {};
   maintenanceCostChartOption: EChartsOption = {};
-  fieldDistributionChartOption: EChartsOption = {};
 
   // Stats
   totalProductionRate: number = 0;
@@ -126,14 +125,13 @@ export class DashboardComponent implements OnInit {
     if (this.dashboardData) {
       this.totalProductionRate = this.dashboardData.totalProductionRate;
       this.totalMaintenanceCost = this.dashboardData.totalMaintenanceCost;
-      this.fieldCount = this.dashboardData.regionDistribution[0].fieldCount;
+      this.fieldCount = this.dashboardData.fieldData?.length || 0;
     }
   }
 
   renderCharts(): void {
     this.renderProductionChart();
     this.renderMaintenanceCostChart();
-    this.renderFieldDistributionChart();
   }
 
   renderProductionChart(): void {
@@ -276,51 +274,6 @@ export class DashboardComponent implements OnInit {
                   color: 'rgba(255, 87, 34, 0.1)'
                 }
               ]
-            }
-          }
-        }
-      ]
-    };
-  }
-
-  renderFieldDistributionChart(): void {
-    if (!this.dashboardData?.regionDistribution) return;
-
-    const data = this.dashboardData.regionDistribution;
-
-    this.fieldDistributionChartOption = {
-      backgroundColor: 'transparent',
-      tooltip: {
-        trigger: 'item',
-        formatter: '{a} <br/>{b}: {c} fields ({d}%)'
-      },
-      legend: {
-        orient: 'vertical',
-        right: 10,
-        top: 'center',
-        data: data.map(item => item.regionName),
-        textStyle: {
-          color: '#333'
-        }
-      },
-      series: [
-        {
-          name: 'Region Distribution',
-          type: 'pie',
-          radius: '55%',
-          center: ['40%', '50%'],
-          data: data.map(item => ({
-            name: item.regionName,
-            value: item.fieldCount
-          })),
-          label: {
-            color: '#333'
-          },
-          emphasis: {
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)'
             }
           }
         }

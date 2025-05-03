@@ -1,14 +1,10 @@
 {
   "APP": {
-    "TITLE": "مقبرة ميابين - مسقط، عمان",
-    "TAGLINE": "البحث وإحياء ذكرى الأحباء",
+    "TITLE": "نظام إنتاج الغاز - شركة تنمية نفط عمان",
     "UNAUTHORIZED": "وصول غير مصرح به"
   },
   "MENU": {
     "SEARCH": "بحث",
-    "CEMETERY_MAP": "خريطة المقبرة",
-    "MEMORIAL_SERVICES": "خدمات الذكرى",
-    "ABOUT_US": "عن الموقع",
     "LOGIN": "تسجيل الدخول",
     "LOGOUT": "تسجيل الخروج",
     "LANGUAGE": "اللغة",
@@ -20,115 +16,6 @@
   "FILTER": {
     "RESET": "إعادة تعيين",
     "APPLY": "تطبيق"
-  },
-  "SEARCH": {
-    "TITLE": "ابحث عن قبر",
-    "PLACEHOLDER": "أدخل الاسم أو رقم القبر",
-    "PLACEHOLDER_ADMIN": "فلان بن فلان بن فلان الفلاني / WK-001",
-    "BUTTON": "بحث",
-    "ADVANCED_SEARCH": "بحث متقدم",
-    "HIDE_ADVANCED_SEARCH": "إخفاء البحث المتقدم",
-    "FILTERS": {
-      "DATE_RANGE": "النطاق الزمني",
-      "LOCATION": "موقع المقبرة",
-      "SECTION": "قسم المقبرة"
-    },
-    "NO_RESULTS": "لم يتم العثور على قبور. يرجى تجربة كلمات بحث مختلفة.",
-    "RESULTS": "نتائج البحث",
-    "LOADING": "جاري البحث...",
-    "LOADING_RESULTS": "جاري تحميل النتائج...",
-    "NO_ITEMS": "لا توجد عناصر للعرض",
-    "OF": "من",
-    "PREVIOUS": "السابق",
-    "NEXT": "التالي"
-  },
-  "CEMETERY_MAP": {
-    "TITLE": "خريطة المقبرة التفاعلية",
-    "INSTRUCTIONS": "اختر مقبرة أو قم بالتكبير لعرض الأقسام",
-    "LEGEND": {
-      "TITLE": "مفتاح الخريطة",
-      "AVAILABLE": "متاح",
-      "OCCUPIED": "مشغول",
-      "RESERVED": "محجوز"
-    }
-  },
-  "MEMORIAL_SERVICES": {
-    "TITLE": "خدمات الذكرى",
-    "DESCRIPTION": "تكريم أحبائك من خلال خدمات الذكرى لدينا",
-    "SERVICES": {
-      "FLOWERS": "توصيل الزهور",
-      "MAINTENANCE": "صيانة القبر",
-      "PRAYER": "خدمات الدعاء",
-      "EVENTS": "فعاليات الذكرى"
-    },
-    "REQUEST_SERVICE": "طلب خدمة"
-  },
-  "ABOUT_US": {
-    "TITLE": "عن مقابر الجديدة",
-    "MISSION": "مهمتنا هي مساعدة الناس في العثور على أحبائهم وتكريمهم",
-    "HISTORY": "تأسست مقابر الجديدة في عام 2023، وهي تدعم العائلات في وقت الحاجة",
-    "CONTACT": {
-      "TITLE": "اتصل بنا",
-      "EMAIL": "info@gravenew.com",
-      "PHONE": "+1-234-567-8900"
-    }
-  },
-  "GRAVE": {
-    "BIRTH": "تاريخ الميلاد",
-    "DEATH": "تاريخ الوفاة",
-    "ZONE": "منطقة المقبرة",
-    "VIEW_DETAILS": "تفاصيل القبر",
-    "GENDER": "الجنس",
-    "CREATE": "إنشاء قبر جديد",
-    "EDIT": "تعديل القبر",
-    "CREATE_SUCCESS": "تم إنشاء القبر رقم {{id}} لـ {{name}} بنجاح",
-    "EDIT_SUCCESS": "تم تحديث القبر رقم {{id}} لـ {{name}} بنجاح",
-    "IMAGE_UPLOAD_SUCCESS": "تم رفع الصورة بنجاح",
-    "IMAGE_UPLOAD_FAILED": "فشل رفع الصورة، ولكن تم حفظ بيانات القبر"
-  },
-  "GRAVE_DETAILS": {
-    "PERSONAL_INFO": "معلومات شخصية",
-    "BIRTH_DATE": "تاريخ الميلاد",
-    "DEATH_DATE": "تاريخ الوفاة",
-    "LOCATION": "الموقع",
-    "MESSAGES": "رسائل تذكارية",
-    "ADD_MESSAGE": "إضافة رسالة",
-    "PHOTOS": "الصور",
-    "PHOTO": "صورة",
-    "ADD_PHOTO": "إضافة صورة",
-    "ZONE": "المنطقة",
-    "TITLE": "تفاصيل القبر",
-    "ERROR": "خطأ",
-    "GRAVE_NUMBER": "رقم القبر",
-    "DATE_OF_BIRTH": "تاريخ الميلاد",
-    "DATE_OF_DEATH": "تاريخ الوفاة",
-    "GENDER": "الجنس",
-    "DESCRIPTION": "الوصف",
-    "LATITUDE": "خط العرض",
-    "LONGITUDE": "خط الطول",
-    "BACK_TO_SEARCH": "العودة إلى البحث",
-    "LOCATION_UNAVAILABLE": "إحداثيات الموقع غير متوفرة لهذا القبر.",
-    "LOADING_MAP": "جاري تحميل الخريطة...",
-    "VIEW_IN_AR": "عرض بالواقع المعزز",
-    "AR_NOTE": "يفتح الكاميرا لعرض موقع القبر بالواقع المعزز",
-    "AR_VIEW": "عرض الواقع المعزز",
-    "NAVIGATE_WITH_GOOGLE_MAPS": "الملاحة عبر خرائط جوجل",
-    "NAVIGATION_NOTE": "يفتح خرائط جوجل للملاحة إلى موقع القبر (وضع المشي)",
-    "DEATH_CERTIFICATE": "شهادة الوفاة",
-    "BODY_CERTIFICATE": "شهادة استلام الجثمان",
-    "NO_DEATH_CERTIFICATE": "لا توجد شهادة وفاة متاحة.",
-    "NO_BODY_CERTIFICATE": "لا توجد شهادة استلام جثمان متاحة.",
-    "SUGGEST_CHANGES": "اقتراح تعديلات",
-    "SUGGEST_CHANGES_TITLE": "اقتراح تصحيحات",
-    "SUGGESTION_DESCRIPTION": "هل لديك معلومات إضافية أو تصحيحات لسجل هذا القبر؟ يرجى تقديم اقتراحاتك أدناه.",
-    "SUGGESTION_MESSAGE": "رسالتك",
-    "SUGGESTION_PLACEHOLDER": "يرجى وصف أي تصحيحات أو معلومات إضافية...",
-    "MESSAGE_REQUIRED": "يرجى تقديم رسالة مع اقتراحاتك",
-    "SEND_SUGGESTION": "إرسال الاقتراح",
-    "SUGGESTION_SENT": "تم إرسال الاقتراح بنجاح",
-    "SUGGESTION_THANK_YOU": "شكرا لمساعدتك في تحسين سجلاتنا.",
-    "SUGGESTION_ERROR": "فشل في إرسال الاقتراح",
-    "SUGGESTION_TRY_AGAIN": "يرجى المحاولة مرة أخرى لاحقًا أو الاتصال بالدعم."
   },
   "LOGIN": {
     "TITLE": "تسجيل الدخول إلى حسابك",
@@ -147,20 +34,7 @@
     "REGISTER": "إنشاء حساب",
     "FORGOT_PASSWORD": "نسيت كلمة المرور؟",
     "NOT_A_MEMBER": "ليس لديك حساب؟",
-    "START_TRIAL": "ابدأ تجربة مجانية لمدة 14 يوم",
-    "REMEMBER_ME": "تذكرني",
-    "OR_CONTINUE": "أو تابع باستخدام",
-    "GOOGLE": "جوجل",
-    "GITHUB": "جيثاب"
-  },
-  "Nav": {
-    "Grave": "إدارة المقابر"
-  },
-  "Tooltip": {
-    "AddNewGrave": "إضافة قبر جديد",
-    "GraveDetails": "عرض التفاصيل",
-    "DownloadQRCode": "تحميل رمز QR",
-    "EditGrave": "تعديل القبر"
+    "REMEMBER_ME": "تذكرني"
   },
   "FEATURE": {
     "EXPORT": "تصدير البيانات",
@@ -171,70 +45,12 @@
     "ANALYTICS_DESC": "عرض الإحصائيات والاتجاهات حول إشغال المقابر والتركيبة السكانية.",
     "LEARN_MORE": "اقرأ المزيد"
   },
-  "GRAVE_FORM": {
-    "UPLOAD_DEATH_CERTIFICATE": "رفع شهادة الوفاة (اختياري)",
-    "UPLOAD_BODY_RECEIPT_CERTIFICATE": "رفع شهادة استلام الجثمان (اختياري)",
-    "GRAVE_IMAGE": "صورة القبر (اختياري)",
-    "DEATH_CERTIFICATE_UPLOAD_SUCCESS": "تم رفع شهادة الوفاة بنجاح.",
-    "DEATH_CERTIFICATE_UPLOAD_FAILED": "فشل رفع شهادة الوفاة، ولكن تم حفظ بيانات القبر.",
-    "BODY_RECEIPT_CERTIFICATE_UPLOAD_SUCCESS": "تم رفع شهادة استلام الجثمان بنجاح.",
-    "BODY_RECEIPT_CERTIFICATE_UPLOAD_FAILED": "فشل رفع شهادة استلام الجثمان، ولكن تم حفظ بيانات القبر.",
-    "INVALID_IMAGE_TYPE": "يسمح فقط بصور JPG أو JPEG."
-  ,
-    "CREATE_TITLE": "إضافة قبر جديد",
-    "EDIT_TITLE": "تعديل القبر",
-    "BASIC_INFO": "معلومات أساسية",
-    "GRAVE_REF": "الرقم المرجعي للقبر",
-    "GENDER": "الجنس",
-    "SELECT_GENDER": "اختر الجنس",
-    "ZONE": "منطقة المقبرة",
-    "SELECT_ZONE": "اختر المنطقة",
-    "FULL_NAME": "الاسم الكامل",
-    "NAME_EN": "الاسم بالإنجليزية",
-    "NAME_AR": "الاسم بالعربية",
-    "DATES": "التواريخ",
-    "DATE_OF_BIRTH": "تاريخ الميلاد",
-    "DATE_OF_DEATH": "تاريخ الوفاة",
-    "DESCRIPTION": "الوصف",
-    "DESCRIPTION_LABEL": "وصف تذكاري بالعربية",
-    "DESCRIPTION_EN_LABEL": "وصف تذكاري بالإنجليزية",
-    "IMAGE": "صورة القبر",
-    "UPLOAD_IMAGE": "رفع صورة",
-    "IMAGE_REQUIREMENTS": "ملفات JPG أو JPEG. الحجم الأقصى 5 ميجابايت.",
-    "LOCATION": "موقع القبر",
-    "LOCATION_INSTRUCTIONS": "اسحب العلامة إلى موقع القبر الدقيق، أو أدخل الإحداثيات يدويًا.",
-    "LATITUDE": "خط العرض",
-    "LONGITUDE": "خط الطول",
-    "SAVE": "حفظ القبر",
-    "UPDATE": "تحديث القبر",
-    "CANCEL": "إلغاء",
-    "RESET": "إعادة تعيين النموذج",
-    "SAVING": "جاري الحفظ...",
-    "CREATE_SUCCESS": "تم إنشاء القبر بنجاح",
-    "EDIT_SUCCESS": "تم تحديث القبر بنجاح",
-    "SEARCH": "بحث",
-    "SEARCH_LOCATION": "ابحث عن موقع",
-    "LOADING_MAP": "جاري تحميل الخريطة...",
-    "USE_CURRENT_LOCATION": "استخدم الموقع الحالي",
-    "GRAVE_TYPE": "نوع القبر",
-    "SELECT_GRAVE_TYPE": "اختر نوع القبر",
-    "AUTOGENERATE_GRAVE_REF": "إنشاء تلقائي لرقم القبر",
-    "FULLNAME_AR": "فلان بن فلان بن فلان الفلاني",
-    "FULLNAME_EN": "Flan bin Flan bin Flan Al Flani",
-    "DESCRIPTION_PLACEHOLDER": "قصة / حكاية / أولاد / أحباء",
-    "DESCRIPTION_EN_PLACEHOLDER": "Story / Legend / Children / Friends",
-    "CHOOSE_FILE": "اختيار ملف",
-    "TEST": "اختبار"
-  },
   "VALIDATION": {
     "REQUIRED": "هذا الحقل مطلوب",
-    "INVALID_FORMAT": "تنسيق غير صالح",
     "MIN_LENGTH": "الحد الأدنى {{requiredLength}} حرف مطلوب",
     "MAX_LENGTH": "تم تجاوز الحد الأقصى {{requiredLength}} حرف",
-    "EMAIL": "عنوان بريد إلكتروني غير صالح",
     "PATTERN": "تنسيق غير صالح",
-    "MIN": "يجب أن تكون القيمة {{min}} على الأقل",
-    "MAX": "لا يمكن أن تتجاوز القيمة {{max}}",
+    "EMAIL": "عنوان بريد إلكتروني غير صالح",
     "PASSWORDS_NOT_MATCH": "كلمات المرور غير متطابقة"
   },
   "DATE_PICKER": {
@@ -279,21 +95,11 @@
     "LOGIN": "تسجيل الدخول"
   },
   "FOOTER": {
-    "COPYRIGHT": "© 2025 مقبرة ميابين - مسقط ، عُمان. جميع الحقوق محفوظة.",
-    "TAGLINE": "نربط العائلات بذكريات أحبائهم",
+    "COPYRIGHT": "© 2025 نظام إنتاج الغاز - شركة تنمية نفط عمان. جميع الحقوق محفوظة.",
+    "TAGLINE": "تمكين موظفينا من تحقيق إمكاناتهم الكاملة من خلال خلق بيئة تعليمية شاملة وداعمة وتعاونية.",
     "PRIVACY": "سياسة الخصوصية",
     "TERMS": "شروط الخدمة",
     "CONTACT": "اتصل بنا",
-    "DESIGNED_WITH": "صُمم بعناية لذكريات العائلة"
-  },
-  "AR_MAP": {
-    "LOADING": "جاري تحميل تجربة الواقع المعزز...",
-    "CAMERA_PERMISSION_NEEDED": "الوصول إلى الكاميرا مطلوب للواقع المعزز. يرجى تمكين إذن الكاميرا.",
-    "LOCATION_PERMISSION_NEEDED": "الوصول إلى الموقع مطلوب للواقع المعزز. يرجى تمكين إذن تحديد الموقع.",
-    "POINT_CAMERA": "وجه الكاميرا نحو الأرض وتحرك للبحث عن المنطقة",
-    "FINDING_LOCATION": "جاري البحث عن موقع القبر...",
-    "FOUND_LOCATION": "تم تحديد موقع القبر! ابحث عن العلامة الحمراء",
-    "NO_AR_SUPPORT": "متصفحك لا يدعم ميزات الواقع المعزز",
-    "ERROR": "خطأ في تحميل الواقع المعزز. يرجى المحاولة مرة أخرى."
+    "DESIGNED_WITH": "تصميم إياد الحمزة"
   }
 }
