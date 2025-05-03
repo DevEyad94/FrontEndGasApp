@@ -110,7 +110,6 @@ export class MapComponent implements OnInit, AfterViewInit {
           content: `
             <div class="p-2">
               <h3 class="font-bold text-lg">${field.name}</h3>
-              <p>ID: ${field.zFieldId}</p>
               <p>Field Name: ${field.name}</p>
               <p>Coordinates: ${field.latitude.toFixed(6)}, ${field.longitude.toFixed(6)}</p>
             </div>
