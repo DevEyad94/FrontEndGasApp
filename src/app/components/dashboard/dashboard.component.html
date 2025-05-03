@@ -1,0 +1,103 @@
+<div class="p-4 bg-gray-50 dark:bg-gray-800 min-h-screen">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Gas Condensate Dashboard</h1>
+
+    <!-- Filter Section -->
+    <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow mb-6">
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Filter Data</h2>
+      <form [formGroup]="filterForm" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Production Rate
+          </label>
+          <input
+            type="number"
+            formControlName="productionRate"
+            placeholder="Minimum rate"
+            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+          >
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Year of Extraction
+          </label>
+          <input
+            type="number"
+            formControlName="year"
+            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+          >
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Maintenance Type
+          </label>
+          <select
+            formControlName="maintenanceType"
+            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+          >
+            <option [ngValue]="null">All Types</option>
+            <option *ngFor="let type of maintenanceTypes" [ngValue]="type.zMaintenanceTypeId">
+              {{ type.name }}
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Minimum Cost
+          </label>
+          <input
+            type="number"
+            formControlName="cost"
+            placeholder="Minimum cost"
+            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+          >
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow">
+      <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Total Production Rate</h3>
+      <p class="text-3xl font-bold text-green-600 dark:text-green-400">{{ totalProductionRate | number }}</p>
+    </div>
+
+    <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow">
+      <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Total Maintenance Cost</h3>
+      <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">${{ totalMaintenanceCost | number:'1.2-2' }}</p>
+    </div>
+
+    <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow">
+      <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Field Count</h3>
+      <p class="text-3xl font-bold text-purple-600 dark:text-purple-400">{{ fieldCount }}</p>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow">
+      <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Production Rate by Field</h3>
+      <div class="h-80">
+        <canvas id="productionChart"></canvas>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow">
+      <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Maintenance Cost by Type</h3>
+      <div class="h-80">
+        <canvas id="maintenanceCostChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow mb-8">
+    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Field Distribution</h3>
+    <div class="h-80">
+      <canvas id="fieldDistributionChart"></canvas>
+    </div>
+  </div>
+</div>

@@ -1,32 +1,26 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-import { GenericResponse } from '../models/pagination.model';
-import { ZGender, zRelationship, ZZone, ZGraveType } from '../models/zsk.model';
+import { GasField, GasFieldResponse } from '../../models/gas-field.model';
+import { MaintenanceType, MaintenanceTypeResponse } from '../../models/maintenance-type.model';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ZskService {
-  private baseUrl = environment.apiUrl + 'zsk/';
+  private apiUrl = `${environment.apiUrl}Zsk/`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  getGender(): Observable<GenericResponse<ZGender[]>> {
-    return this.http.get<GenericResponse<ZGender[]>>(this.baseUrl + "Genders");
+  getFields(): Observable<GasField[]> {
+    return this.http.get<GasFieldResponse>(`${this.apiUrl}zFields`)
+      .pipe(map(response => response.data));
   }
-  getZone(): Observable<GenericResponse<ZZone[]>> {
-    return this.http.get<GenericResponse<ZZone[]>>(this.baseUrl + "Zones");
-  }
-  getRelationship(): Observable<GenericResponse<zRelationship[]>> {
-    return this.http.get<GenericResponse<zRelationship[]>>(
-      this.baseUrl + "Relationship"
-    );
-  }
-  getGraveType(): Observable<GenericResponse<ZGraveType[]>> {
-    return this.http.get<GenericResponse<ZGraveType[]>>(
-      this.baseUrl + "GraveTypes"
-    );
+
+  getMaintenanceTypes(): Observable<MaintenanceType[]> {
+    return this.http.get<MaintenanceTypeResponse>(`${this.apiUrl}zMaintenanceTypes`)
+      .pipe(map(response => response.data));
   }
 }

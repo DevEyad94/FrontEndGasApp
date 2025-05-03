@@ -54,51 +54,17 @@
 
     <!-- Desktop navigation menu - simplified without dropdown -->
     <div class="hidden lg:flex lg:gap-x-12">
-      <!-- Updated navbar links for grave search application -->
-      <a
-        routerLink="/"
-        routerLinkActive="text-pdo-green dark:text-pdo-green-light"
-        [routerLinkActiveOptions]="{ exact: true }"
-        class="text-sm/6 font-semibold text-gray-900 dark:text-gray-100 hover:text-pdo-green hover:dark:text-pdo-green-light transition-colors duration-200 no-underline"
-        >{{ "MENU.SEARCH" | translate }}</a
-      >
-      <a
-        routerLink="/story"
-        routerLinkActive="text-pdo-green dark:text-pdo-green-light"
-        [routerLinkActiveOptions]="{ exact: false }"
-        class="text-sm/6 font-semibold text-gray-900 dark:text-gray-100 hover:text-pdo-green hover:dark:text-pdo-green-light transition-colors duration-200 no-underline"
-        >{{ "MENU.STORY" | translate }}</a
-      >
-      <!-- <a
-        routerLink="/cemetery-map"
-        routerLinkActive="text-pdo-green dark:text-pdo-green-light"
-        [routerLinkActiveOptions]="{ exact: false }"
-        class="text-sm/6 font-semibold text-gray-900 dark:text-gray-100 hover:text-pdo-green hover:dark:text-pdo-green-light transition-colors duration-200 no-underline"
-        >{{ "MENU.CEMETERY_MAP" | translate }}</a
-      >
-      <a
-        routerLink="/memorial-services"
-        routerLinkActive="text-pdo-green dark:text-pdo-green-light"
-        [routerLinkActiveOptions]="{ exact: false }"
-        class="text-sm/6 font-semibold text-gray-900 dark:text-gray-100 hover:text-pdo-green hover:dark:text-pdo-green-light transition-colors duration-200 no-underline"
-        >{{ "MENU.MEMORIAL_SERVICES" | translate }}</a
-      >
-      <a
-        routerLink="/about"
-        routerLinkActive="text-pdo-green dark:text-pdo-green-light"
-        [routerLinkActiveOptions]="{ exact: false }"
-        class="text-sm/6 font-semibold text-gray-900 dark:text-gray-100 hover:text-pdo-green hover:dark:text-pdo-green-light transition-colors duration-200 no-underline"
-        >{{ "MENU.ABOUT_US" | translate }}</a
-      > -->
-      <!-- Management item with role-based access control -->
+      <!-- Navigation links only visible to authenticated users -->
       <ng-container *appHasRole="['Admin', 'User']">
-        <a
-          routerLink="grave/management"
-          routerLinkActive="text-pdo-green dark:text-pdo-green-light"
-          [routerLinkActiveOptions]="{ exact: false }"
-          class="text-sm/6 font-semibold text-gray-900 dark:text-gray-100 hover:text-pdo-green hover:dark:text-pdo-green-light transition-colors duration-200 no-underline"
-          >{{ "MENU.MANAGEMENT" | translate }}</a
-        >
+        <ng-container *ngFor="let item of authNavItems">
+          <a
+            [routerLink]="item.route"
+            routerLinkActive="text-pdo-green dark:text-pdo-green-light"
+            [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+            class="text-sm/6 font-semibold text-gray-900 dark:text-gray-100 hover:text-pdo-green hover:dark:text-pdo-green-light transition-colors duration-200 no-underline"
+            >{{ item.translateKey ? (item.translateKey | translate) : item.label }}</a
+          >
+        </ng-container>
       </ng-container>
     </div>
 
@@ -212,62 +178,19 @@
       <div class="mt-6 flow-root">
         <div class="-my-6 divide-y divide-gray-500/10 dark:divide-gray-700/50">
           <div class="space-y-2 py-6">
-            <a
-              id="mobile-menu-search"
-              routerLink="/"
-              routerLinkActive="text-pdo-green dark:text-pdo-green-light bg-gray-50 dark:bg-gray-700"
-              [routerLinkActiveOptions]="{ exact: true }"
-              class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 dark:text-gray-100 hover:text-pdo-green hover:dark:text-pdo-green-light hover:bg-gray-50 hover:dark:bg-gray-700 transition-colors duration-200 no-underline"
-              (click)="closeMobileMenu()"
-              >{{ "MENU.SEARCH" | translate }}</a
-            >
-            <a
-              id="mobile-menu-story"
-              routerLink="/story"
-              routerLinkActive="text-pdo-green dark:text-pdo-green-light bg-gray-50 dark:bg-gray-700"
-              [routerLinkActiveOptions]="{ exact: false }"
-              class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 dark:text-gray-100 hover:text-pdo-green hover:dark:text-pdo-green-light hover:bg-gray-50 hover:dark:bg-gray-700 transition-colors duration-200 no-underline"
-              (click)="closeMobileMenu()"
-              >{{ "MENU.STORY" | translate }}</a
-            >
-            <!-- <a
-              id="mobile-menu-map"
-              routerLink="/cemetery-map"
-              routerLinkActive="text-pdo-green dark:text-pdo-green-light bg-gray-50 dark:bg-gray-700"
-              [routerLinkActiveOptions]="{ exact: false }"
-              class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 dark:text-gray-100 hover:text-pdo-green hover:dark:text-pdo-green-light hover:bg-gray-50 hover:dark:bg-gray-700 transition-colors duration-200 no-underline"
-              (click)="closeMobileMenu()"
-              >{{ "MENU.CEMETERY_MAP" | translate }}</a
-            >
-            <a
-              id="mobile-menu-memorial"
-              routerLink="/memorial-services"
-              routerLinkActive="text-pdo-green dark:text-pdo-green-light bg-gray-50 dark:bg-gray-700"
-              [routerLinkActiveOptions]="{ exact: false }"
-              class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 dark:text-gray-100 hover:text-pdo-green hover:dark:text-pdo-green-light hover:bg-gray-50 hover:dark:bg-gray-700 transition-colors duration-200 no-underline"
-              (click)="closeMobileMenu()"
-              >{{ "MENU.MEMORIAL_SERVICES" | translate }}</a
-            >
-            <a
-              id="mobile-menu-about"
-              routerLink="/about"
-              routerLinkActive="text-pdo-green dark:text-pdo-green-light bg-gray-50 dark:bg-gray-700"
-              [routerLinkActiveOptions]="{ exact: false }"
-              class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 dark:text-gray-100 hover:text-pdo-green hover:dark:text-pdo-green-light hover:bg-gray-50 hover:dark:bg-gray-700 transition-colors duration-200 no-underline"
-              (click)="closeMobileMenu()"
-              >{{ "MENU.ABOUT_US" | translate }}</a
-            > -->
-            <!-- Management item with role-based access control for mobile -->
+            <!-- Authenticated links -->
             <ng-container *appHasRole="['Admin', 'User']">
-              <a
-                id="mobile-menu-management"
-                routerLink="grave/management"
-                routerLinkActive="text-pdo-green dark:text-pdo-green-light bg-gray-50 dark:bg-gray-700"
-                [routerLinkActiveOptions]="{ exact: false }"
-                class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 dark:text-gray-100 hover:text-pdo-green hover:dark:text-pdo-green-light hover:bg-gray-50 hover:dark:bg-gray-700 transition-colors duration-200 no-underline"
-                (click)="closeMobileMenu()"
-                >{{ "MENU.MANAGEMENT" | translate }}</a
-              >
+              <ng-container *ngFor="let item of authNavItems">
+                <a
+                  [id]="item.id || 'mobile-' + item.route.replace('/', '')"
+                  [routerLink]="item.route"
+                  routerLinkActive="text-pdo-green dark:text-pdo-green-light bg-gray-50 dark:bg-gray-700"
+                  [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+                  class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 dark:text-gray-100 hover:text-pdo-green hover:dark:text-pdo-green-light hover:bg-gray-50 hover:dark:bg-gray-700 transition-colors duration-200 no-underline"
+                  (click)="closeMobileMenu()"
+                  >{{ item.translateKey ? (item.translateKey | translate) : item.label }}</a
+                >
+              </ng-container>
             </ng-container>
           </div>
           <div class="py-6">

@@ -7,19 +7,45 @@ import { LoginComponent } from './components/admin/login/login.component';
 export const routes: Routes = [
   {
     path: '',
-    component: LoginComponent,
-    title: 'APP.TITLE',
+    redirectTo: 'dashboard',
+    pathMatch: 'full',
   },
-  // {
-  //   path: 'search/:id',
-  //   component: GraveSearchDetailsComponent,
-  //   title: 'SEARCH.TITLE',
-  // },
-  // {
-  //   path: 'story',
-  //   component: StoryComponent,
-  //   title: 'MENU.STORY',
-  // },
+  {
+    path: 'dashboard',
+    loadComponent: () =>
+      import('./components/dashboard/dashboard.component').then(
+        (m) => m.DashboardComponent
+      ),
+    canActivate: [AuthGuard],
+    title: 'Dashboard',
+  },
+  {
+    path: 'map',
+    loadComponent: () =>
+      import('./components/map/map.component').then(
+        (m) => m.MapComponent
+      ),
+    canActivate: [AuthGuard],
+    title: 'Gas Field Map',
+  },
+  {
+    path: 'production',
+    loadComponent: () =>
+      import('./components/production-records/production-records.component').then(
+        (m) => m.ProductionRecordsComponent
+      ),
+    canActivate: [AuthGuard],
+    title: 'Production Records',
+  },
+  {
+    path: 'maintenance',
+    loadComponent: () =>
+      import('./components/maintenance-records/maintenance-records.component').then(
+        (m) => m.MaintenanceRecordsComponent
+      ),
+    canActivate: [AuthGuard],
+    title: 'Maintenance Records',
+  },
   {
     path: 'colors',
     loadComponent: () =>
@@ -34,7 +60,7 @@ export const routes: Routes = [
       import('./components/admin/login/login.component').then(
         (m) => m.LoginComponent
       ),
-    title: 'MENU.LOGIN',
+    title: 'Login',
   },
   {
     path: 'admin/login',
@@ -42,7 +68,7 @@ export const routes: Routes = [
       import('./components/admin/login/login.component').then(
         (m) => m.LoginComponent
       ),
-    title: 'MENU.LOGIN',
+    title: 'Login',
   },
   // {
   //   path: 'grave/management',
@@ -86,8 +112,8 @@ export const routes: Routes = [
       import('./components/unauthorized/unauthorized.component').then(
         (m) => m.UnauthorizedComponent
       ),
-    title: 'APP.UNAUTHORIZED',
+    title: 'Unauthorized',
   },
   // Additional routes will be added as components are created
-  { path: '**', redirectTo: '', pathMatch: 'full' }, // Redirect any unknown routes to home
+  { path: '**', redirectTo: 'dashboard', pathMatch: 'full' }, // Redirect any unknown routes to dashboard
 ];

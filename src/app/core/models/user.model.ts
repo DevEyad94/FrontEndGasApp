@@ -1,7 +1,6 @@
 export interface UserLogin {
   username: string;
   passwordHash: string;
-  rememberMe?: boolean;
 }
 
 export interface UserInfo {

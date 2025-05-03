@@ -34,12 +34,20 @@
   <div class="relative flex flex-col flex-grow">
     <!-- Header -->
     <app-header></app-header>
+    <div class="flex flex-1 overflow-hidden">
+      <!-- Sidebar Component (only when logged in) -->
+      <!-- <app-sidebar
+        [showMobileMenu]="showMobileMenu"
+        (logout)="logout()"
+        (toggleMobileMenu)="toggleMobileMenu()"
+      >
+      </app-sidebar> -->
 
-    <!-- Main content -->
-    <main class="flex-grow pt-16 text-gray-900 dark:text-gray-100">
-      <router-outlet />
-    </main>
-
+      <!-- Main content -->
+      <main class="flex-grow pt-16 text-gray-900 dark:text-gray-100">
+        <router-outlet />
+      </main>
+    </div>
     <!-- Footer -->
     <app-footer></app-footer>
   </div>

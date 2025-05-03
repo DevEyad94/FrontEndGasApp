@@ -1,0 +1,20 @@
+/* Animation for table loading state */
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Add some responsive tweaks */
+@media (max-width: 640px) {
+  .whitespace-nowrap {
+    white-space: normal;
+  }
+}

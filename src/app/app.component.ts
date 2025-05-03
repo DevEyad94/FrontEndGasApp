@@ -1,90 +1,96 @@
-import { Component, inject, PLATFORM_ID, Inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from './shared/header/header.component';
+import { Component, inject, PLATFORM_ID, Inject, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import { isPlatformBrowser } from '@angular/common';
+import { HeaderComponent } from './shared/header/header.component';
 import { FooterComponent } from './shared/footer/footer.component';
+import { AuthService } from './services/auth.service';
+import { User } from './models/user.model';
+
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, FooterComponent],
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    HeaderComponent,
+    FooterComponent
+  ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  title = 'GraveNew';
+export class AppComponent implements OnInit, OnDestroy {
+  title = 'Gas Condensate Management';
+  isLoggedIn = false;
+  currentUser: User | null = null;
+  showUserMenu = false;
+  showMobileMenu = false;
+  private authSubscription: Subscription | null = null;
 
   constructor(
     private translate: TranslateService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private authService: AuthService
   ) {
     // Set the default language (do this first)
-    translate.setDefaultLang('en');
-    translate.use('en'); // Set an initial language to avoid undefined issues
+    this.translate.setDefaultLang('en');
 
-    // Only access localStorage in the browser environment
+    // If the browser's language is available, use it
     if (isPlatformBrowser(this.platformId)) {
-      // First check if there's a saved preference in localStorage
-      const savedLang = localStorage.getItem('preferredLanguage');
-      if (savedLang && ['en', 'ar'].includes(savedLang)) {
-        translate.use(savedLang);
-
-        // Set document direction based on language
-        if (savedLang === 'ar') {
-          document.documentElement.dir = 'rtl';
-          document.body.classList.add('rtl');
-        } else {
-          document.documentElement.dir = 'ltr';
-          document.body.classList.remove('rtl');
-        }
+      const browserLang = navigator.language.split('-')[0];
+      if (browserLang) {
+        const langs = ['en', 'ar'];
+        this.translate.use(langs.includes(browserLang) ? browserLang : 'en');
       } else {
-        try {
-          // Use browser language if available, otherwise use Arabic
-          // const browserLang = translate.getBrowserLang();
-          // const lang = browserLang && ['en', 'ar'].includes(browserLang) ? browserLang : 'ar';
-          const lang = 'en';
-          translate.use(lang);
-
-          // Save this language preference
-          localStorage.setItem('preferredLanguage', lang);
-
-          // Set document direction based on language
-          if (lang === 'en') {
-            document.documentElement.dir = 'ltr';
-            document.body.classList.remove('rtl');
-          } else {
-            document.documentElement.dir = 'rtl';
-            document.body.classList.add('rtl');
-          }
-        } catch (error) {
-          console.warn('Error setting language from browser:', error);
-          // Fallback to Arabic on error
-          translate.use('en');
-        }
+        this.translate.use('en');
       }
-
-      // Initialize dark mode from localStorage or system preference
       this.initializeDarkMode();
-    } else {
-      // Default to English on the server
-      translate.use('en');
     }
   }
 
-  private initializeDarkMode(): void {
-    // Check localStorage first
-    const savedTheme = localStorage.getItem('theme');
+  ngOnInit(): void {
+    this.authSubscription = this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+      this.isLoggedIn = !!user;
+    });
+  }
 
-    if (savedTheme === 'dark') {
+  ngOnDestroy(): void {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
+  }
+
+  toggleUserMenu(): void {
+    this.showUserMenu = !this.showUserMenu;
+  }
+
+  toggleMobileMenu(): void {
+    console.log('Mobile menu toggling is now handled by HeaderComponent');
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.showUserMenu = false;
+    this.showMobileMenu = false;
+  }
+
+  private initializeDarkMode(): void {
+    // Check if dark mode preference exists in localStorage
+    const darkModePreference = localStorage.getItem('color-scheme');
+
+    // If preference exists, set dark mode accordingly
+    if (darkModePreference === 'dark') {
       document.documentElement.classList.add('dark');
-    } else if (savedTheme === 'light') {
+    } else if (darkModePreference === 'light') {
       document.documentElement.classList.remove('dark');
-    } else {
-      // If no saved preference, check system preference
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (prefersDark) {
-        document.documentElement.classList.add('dark');
-      }
+    }
+    // If no preference, check for system preference
+    else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.classList.add('dark');
     }
   }
 }

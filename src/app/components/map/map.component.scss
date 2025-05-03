@@ -1,0 +1,17 @@
+/* Map container styles */
+:host {
+  display: block;
+  width: 100%;
+}
+
+.gm-style-iw {
+  /* Style for map info windows */
+  font-family: 'Arial', sans-serif;
+}
+
+/* Ensure map controls are visible in dark mode */
+:host-context(.dark-theme) {
+  .gm-style {
+    filter: brightness(0.9) contrast(1.1);
+  }
+}

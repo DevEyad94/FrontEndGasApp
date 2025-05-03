@@ -1,0 +1,11 @@
+/* Custom styles for dashboard */
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.dark {
+  canvas {
+    filter: brightness(0.9);
+  }
+}

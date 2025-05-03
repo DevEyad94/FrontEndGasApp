@@ -1,4 +1,12 @@
-import { Component, AfterViewInit, Inject, PLATFORM_ID, HostListener, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  Inject,
+  PLATFORM_ID,
+  HostListener,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Router, RouterModule } from '@angular/router';
@@ -6,17 +14,22 @@ import { AuthService } from '../../core/services/auth.service';
 import { HasRoleDirective } from '../directives/hasRole.directive';
 import { Subject, takeUntil } from 'rxjs';
 
+interface NavItem {
+  route: string;
+  label: string;
+  translateKey?: string;
+  icon?: string;
+  exact?: boolean;
+  id?: string;
+  requires_auth?: boolean;
+}
+
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [
-    CommonModule,
-    TranslateModule,
-    RouterModule,
-    HasRoleDirective
-  ],
+  imports: [CommonModule, TranslateModule, RouterModule, HasRoleDirective],
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements AfterViewInit, OnInit, OnDestroy {
   currentLang: string = 'en';
@@ -25,6 +38,45 @@ export class HeaderComponent implements AfterViewInit, OnInit, OnDestroy {
   isMobileMenuOpen: boolean = false;
   isLoggedIn: boolean = false;
   private destroy$ = new Subject<void>();
+
+  // Navigation items for both public and authenticated users
+  navItems: NavItem[] = [
+    // Authenticated routes
+    {
+      route: '/dashboard',
+      label: 'Dashboard',
+      id: 'menu-dashboard',
+      exact: false,
+      requires_auth: true,
+    },
+    {
+      route: '/map',
+      label: 'Field Map',
+      id: 'menu-map',
+      exact: false,
+      requires_auth: true,
+    },
+    {
+      route: '/production',
+      label: 'Production Records',
+      id: 'menu-production',
+      exact: false,
+      requires_auth: true,
+    },
+    {
+      route: '/maintenance',
+      label: 'Maintenance Records',
+      id: 'menu-maintenance',
+      exact: false,
+      requires_auth: true,
+    },
+  ];
+
+
+  // Helper getter for authenticated navItems
+  get authNavItems(): NavItem[] {
+    return this.navItems.filter((item) => item.requires_auth);
+  }
 
   // Add a MediaQueryList property to track system dark mode preference
   private prefersColorSchemeMedia?: MediaQueryList;
@@ -63,7 +115,7 @@ export class HeaderComponent implements AfterViewInit, OnInit, OnDestroy {
     // Subscribe to auth state
     this.authService.currentUser$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(user => {
+      .subscribe((user) => {
         this.isLoggedIn = !!user?.token;
       });
   }
@@ -72,7 +124,8 @@ export class HeaderComponent implements AfterViewInit, OnInit, OnDestroy {
   @HostListener('window:resize', ['$event'])
   onResize(event: any): void {
     // If we're in a browser environment and the window width is desktop-sized
-    if (this.isBrowser && window.innerWidth >= 1024) { // 1024px is the 'lg' breakpoint in Tailwind
+    if (this.isBrowser && window.innerWidth >= 1024) {
+      // 1024px is the 'lg' breakpoint in Tailwind
       if (this.isMobileMenuOpen) {
         this.isMobileMenuOpen = false;
         if (this.isBrowser) {
@@ -167,21 +220,29 @@ export class HeaderComponent implements AfterViewInit, OnInit, OnDestroy {
     if (!this.isBrowser) return;
 
     // Desktop product dropdown toggle
-    const productDropdownToggle = document.getElementById('product-dropdown-toggle');
+    const productDropdownToggle = document.getElementById(
+      'product-dropdown-toggle'
+    );
     const productDropdown = document.getElementById('product-dropdown');
 
     // Desktop product dropdown toggle
     if (productDropdownToggle && productDropdown) {
       productDropdownToggle.addEventListener('click', () => {
         productDropdown.classList.toggle('hidden');
-        const isExpanded = productDropdownToggle.getAttribute('aria-expanded') === 'true';
-        productDropdownToggle.setAttribute('aria-expanded', (!isExpanded).toString());
+        const isExpanded =
+          productDropdownToggle.getAttribute('aria-expanded') === 'true';
+        productDropdownToggle.setAttribute(
+          'aria-expanded',
+          (!isExpanded).toString()
+        );
       });
 
       // Close dropdown when clicking outside
       document.addEventListener('click', (event) => {
-        if (!productDropdownToggle.contains(event.target as Node) &&
-            !productDropdown.contains(event.target as Node)) {
+        if (
+          !productDropdownToggle.contains(event.target as Node) &&
+          !productDropdown.contains(event.target as Node)
+        ) {
           productDropdown.classList.add('hidden');
           productDropdownToggle.setAttribute('aria-expanded', 'false');
         }
