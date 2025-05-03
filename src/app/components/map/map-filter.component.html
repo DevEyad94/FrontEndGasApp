@@ -1,0 +1,127 @@
+<div class="bg-white dark:bg-gray-700 rounded-lg shadow p-4 mb-4">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Filter Fields</h2>
+    <div>
+      <button type="button" (click)="toggleAdvancedFilters()" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 mr-2">
+        {{ showAdvancedFilters ? 'Hide Advanced' : 'Show Advanced' }}
+      </button>
+      <button type="button" (click)="clearFilters()" class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300">
+        Clear Filters
+      </button>
+    </div>
+  </div>
+
+  <form [formGroup]="filterForm" class="space-y-4">
+    <!-- Basic Filters Row -->
+    <div class="grid md:grid-cols-2 gap-4">
+      <!-- Production Rate Min/Max Group -->
+      <div class="grid grid-cols-2 gap-2">
+        <app-text-input
+          formControlName="minProductionRate"
+          type="number"
+          label="Min Production Rate"
+          placeholder="Minimum rate"
+          id="minProductionRate"
+          name="minProductionRate"
+          inputMode="numeric"
+        ></app-text-input>
+
+        <app-text-input
+          formControlName="maxProductionRate"
+          type="number"
+          label="Max Production Rate"
+          placeholder="Maximum rate"
+          id="maxProductionRate"
+          name="maxProductionRate"
+          inputMode="numeric"
+        ></app-text-input>
+      </div>
+
+      <!-- Single Year Filter -->
+      <div class="grid grid-cols-2 gap-2">
+        <app-zsk-select
+          formControlName="extractionYear"
+          label="Extraction Year"
+          id="extractionYear"
+          name="extractionYear"
+          placeholder="All Years"
+          [options]="yearOptions"
+        ></app-zsk-select>
+
+        <app-zsk-select
+          formControlName="fieldId"
+          label="Field"
+          id="fieldId"
+          name="fieldId"
+          placeholder="All Fields"
+          [options]="fieldOptions"
+        ></app-zsk-select>
+      </div>
+    </div>
+
+    <!-- Advanced Filters Section -->
+    <div *ngIf="showAdvancedFilters" class="space-y-4">
+      <div class="grid md:grid-cols-2 gap-4">
+        <!-- Year Range -->
+        <div class="grid grid-cols-2 gap-2">
+          <app-zsk-select
+            formControlName="fromYear"
+            label="From Year"
+            id="fromYear"
+            name="fromYear"
+            placeholder="Any Year"
+            [options]="yearOptions"
+          ></app-zsk-select>
+
+          <app-zsk-select
+            formControlName="toYear"
+            label="To Year"
+            id="toYear"
+            name="toYear"
+            placeholder="Any Year"
+            [options]="yearOptions"
+          ></app-zsk-select>
+        </div>
+
+        <!-- Maintenance Type -->
+        <div class="grid grid-cols-2 gap-2">
+          <app-zsk-select
+            formControlName="maintenanceTypeId"
+            label="Maintenance Type"
+            id="maintenanceTypeId"
+            name="maintenanceTypeId"
+            placeholder="All Types"
+            [options]="maintenanceTypeOptions"
+          ></app-zsk-select>
+
+          <div></div> <!-- Empty placeholder for grid alignment -->
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4">
+        <!-- Maintenance Cost -->
+        <div class="grid grid-cols-2 gap-2">
+          <app-text-input
+            formControlName="minCost"
+            type="number"
+            label="Min Cost"
+            placeholder="Minimum cost"
+            id="minCost"
+            name="minCost"
+            inputMode="numeric"
+          ></app-text-input>
+
+          <app-text-input
+            formControlName="maxCost"
+            type="number"
+            label="Max Cost"
+            placeholder="Maximum cost"
+            id="maxCost"
+            name="maxCost"
+            inputMode="numeric"
+          ></app-text-input>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

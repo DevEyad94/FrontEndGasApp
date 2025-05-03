@@ -4,6 +4,13 @@
     <p class="mt-2 text-gray-600 dark:text-gray-300">Interactive map showing all gas condensate field locations.</p>
   </div>
 
+  <!-- Map Filters -->
+  <app-map-filter
+    [maintenanceTypes]="maintenanceTypes"
+    [fields]="fieldOptions"
+    (filtersChanged)="onFiltersChanged($event)">
+  </app-map-filter>
+
   <div class="bg-white dark:bg-gray-700 rounded-lg shadow overflow-hidden">
     <div #mapContainer class="w-full h-[75vh] z-0"></div>
   </div>
@@ -12,13 +19,43 @@
     <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Field Information</h2>
 
     <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
+      <!-- Dashboard Fields Table (when available) -->
+      <table *ngIf="dashboardFields.length > 0" class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
         <thead class="bg-gray-50 dark:bg-gray-800">
           <tr>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Field ID</th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Name</th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Latitude</th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Longitude</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white dark:bg-gray-700 divide-y divide-gray-200 dark:divide-gray-600">
+          <tr *ngFor="let field of dashboardFields" class="hover:bg-gray-100 dark:hover:bg-gray-600">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ field.fieldId }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{{ field.fieldName }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ field.latitude.toFixed(6) }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ field.longitude.toFixed(6) }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+              <button
+                (click)="navigateToFieldDetails(field.fieldId)"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">
+                View Details
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Default Fields Table (when no dashboard data) -->
+      <table *ngIf="dashboardFields.length === 0" class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
+        <thead class="bg-gray-50 dark:bg-gray-800">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Field ID</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Name</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Latitude</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Longitude</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
           </tr>
         </thead>
         <tbody class="bg-white dark:bg-gray-700 divide-y divide-gray-200 dark:divide-gray-600">
@@ -27,6 +64,13 @@
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{{ field.name }}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ field.latitude.toFixed(6) }}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ field.longitude.toFixed(6) }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+              <button
+                (click)="navigateToFieldDetails(field.zFieldId)"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">
+                View Details
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
