@@ -9,17 +9,26 @@ import { DashboardService } from '../../shared/services/dashboard.service';
 import { DashboardFilter, DashboardResponse } from '../../models/dashboard.model';
 import { NgxEchartsModule } from 'ngx-echarts';
 import type { EChartsOption } from 'echarts';
+import { TextInputComponent } from '../../shared/components/text-input/text-input.component';
+import { ZskSelectComponent } from '../../shared/components/zsk/zsk-select.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NgxEchartsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    NgxEchartsModule,
+    TextInputComponent,
+    ZskSelectComponent
+  ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
   filterForm!: FormGroup;
   maintenanceTypes: MaintenanceType[] = [];
+  maintenanceTypeOptions: { value: any, label: string }[] = [];
 
   // Dashboard data
   dashboardData?: DashboardResponse;
@@ -74,6 +83,10 @@ export class DashboardComponent implements OnInit {
   loadFilterOptions(): void {
     this.zskService.getMaintenanceTypes().subscribe(result => {
       this.maintenanceTypes = result;
+      this.maintenanceTypeOptions = this.maintenanceTypes.map(type => ({
+        value: type.zMaintenanceTypeId,
+        label: type.name
+      }));
     });
   }
 

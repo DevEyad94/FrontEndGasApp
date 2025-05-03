@@ -7,99 +7,95 @@
       <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Filter Data</h2>
       <form [formGroup]="filterForm" class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Min Production Rate
-          </label>
-          <input
-            type="number"
+          <app-text-input
             formControlName="minProductionRate"
+            type="number"
+            label="Min Production Rate"
             placeholder="Minimum rate"
-            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-          >
+            id="minProductionRate"
+            name="minProductionRate"
+            inputMode="numeric"
+          ></app-text-input>
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Max Production Rate
-          </label>
-          <input
-            type="number"
+          <app-text-input
             formControlName="maxProductionRate"
+            type="number"
+            label="Max Production Rate"
             placeholder="Maximum rate"
-            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-          >
+            id="maxProductionRate"
+            name="maxProductionRate"
+            inputMode="numeric"
+          ></app-text-input>
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Extraction Year
-          </label>
-          <input
-            type="number"
+          <app-text-input
             formControlName="extractionYear"
-            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-          >
+            type="number"
+            label="Extraction Year"
+            id="extractionYear"
+            name="extractionYear"
+            inputMode="numeric"
+          ></app-text-input>
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            From Year
-          </label>
-          <input
-            type="number"
+          <app-text-input
             formControlName="fromYear"
-            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-          >
+            type="number"
+            label="From Year"
+            id="fromYear"
+            name="fromYear"
+            inputMode="numeric"
+          ></app-text-input>
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            To Year
-          </label>
-          <input
-            type="number"
+          <app-text-input
             formControlName="toYear"
-            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-          >
+            type="number"
+            label="To Year"
+            id="toYear"
+            name="toYear"
+            inputMode="numeric"
+          ></app-text-input>
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Maintenance Type
-          </label>
-          <select
+          <app-zsk-select
             formControlName="maintenanceTypeId"
-            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-          >
-            <option [ngValue]="null">All Types</option>
-            <option *ngFor="let type of maintenanceTypes" [ngValue]="type.zMaintenanceTypeId">
-              {{ type.name }}
-            </option>
-          </select>
+            label="Maintenance Type"
+            id="maintenanceTypeId"
+            name="maintenanceTypeId"
+            placeholder="All Types"
+            [options]="maintenanceTypeOptions"
+          ></app-zsk-select>
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Min Cost
-          </label>
-          <input
-            type="number"
+          <app-text-input
             formControlName="minCost"
+            type="number"
+            label="Min Cost"
             placeholder="Minimum cost"
-            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-          >
+            id="minCost"
+            name="minCost"
+            inputMode="numeric"
+          ></app-text-input>
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Max Cost
-          </label>
-          <input
-            type="number"
+          <app-text-input
             formControlName="maxCost"
+            type="number"
+            label="Max Cost"
             placeholder="Maximum cost"
-            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-          >
+            id="maxCost"
+            name="maxCost"
+            inputMode="numeric"
+          ></app-text-input>
         </div>
       </form>
     </div>
