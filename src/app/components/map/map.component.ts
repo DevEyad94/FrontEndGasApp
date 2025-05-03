@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ZskService } from '../../core/services/zsk.service';
+import { ZskService } from '../../shared/services/zsk.service';
 import { GasField } from '../../models/gas-field.model';
 import { environment } from '../../../environments/environment';
 

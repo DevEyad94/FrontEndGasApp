@@ -20,16 +20,15 @@ import { TranslateService, TranslateModule } from '@ngx-translate/core';
 export class DatePickerComponent implements OnInit, ControlValueAccessor {
   @Input() placeholder: string = 'Select date';
   @Input() required: boolean = false;
-  @Input() formControl: any; // For validation in template
+  @Input() errorMessage: string = '';
   @Output() dateSelected = new EventEmitter<Date>();
 
   showDatepicker: boolean = false;
   selectedDate: Date | null = null;
   displayValue: string = '';
-
-  // Add property to track errors from parent control
-  controlErrors: any = null;
-  controlTouched: boolean = false;
+  disabled: boolean = false;
+  touched: boolean = false;
+  hasErrors: boolean = false;
 
   // RTL support
   isRtl: boolean = false;
@@ -80,11 +79,7 @@ export class DatePickerComponent implements OnInit, ControlValueAccessor {
   // ControlValueAccessor implementation
   onChange: any = () => {};
   onTouched: any = () => {
-    this.controlTouched = true;
-    // Call the parent form's onTouched if it exists
-    if (this.formControl) {
-      this.formControl.markAsTouched();
-    }
+    this.touched = true;
   };
 
   constructor(private translateService: TranslateService, private elementRef: ElementRef) {}
@@ -107,20 +102,6 @@ export class DatePickerComponent implements OnInit, ControlValueAccessor {
       this.setupLanguage();
       this.generateCalendar();
     });
-
-    // Watch for formControl changes
-    if (this.formControl) {
-      // Watch for status changes (validation)
-      this.formControl.statusChanges.subscribe(() => {
-        this.controlErrors = this.formControl.errors;
-        this.controlTouched = this.formControl.touched;
-      });
-
-      // Watch for value changes
-      this.formControl.valueChanges.subscribe(() => {
-        this.controlTouched = this.formControl.touched;
-      });
-    }
   }
 
   setupLanguage(): void {
@@ -381,25 +362,7 @@ export class DatePickerComponent implements OnInit, ControlValueAccessor {
   }
 
   setDisabledState?(isDisabled: boolean): void {
-    // Implementation for disabled state if needed
-  }
-
-  // Check if control has the given error
-  hasError(errorType: string): boolean {
-    return this.controlErrors && this.controlErrors[errorType];
-  }
-
-  // Check if control is touched and has errors
-  shouldShowError(): boolean {
-    return this.controlTouched && this.required && this.hasError('required');
-  }
-
-  // Public method to update control state
-  updateControlState(): void {
-    if (this.formControl) {
-      this.controlErrors = this.formControl.errors;
-      this.controlTouched = this.formControl.touched;
-    }
+    this.disabled = isDisabled;
   }
 
   // View mode switching

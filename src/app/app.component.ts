@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { HeaderComponent } from './shared/header/header.component';
 import { FooterComponent } from './shared/footer/footer.component';
-import { AuthService } from './services/auth.service';
+import { AuthService } from './shared/services/auth.service';
 import { User } from './models/user.model';
 
 @Component({
@@ -14,8 +14,6 @@ import { User } from './models/user.model';
   imports: [
     CommonModule,
     RouterOutlet,
-    RouterLink,
-    RouterLinkActive,
     HeaderComponent,
     FooterComponent
   ],
@@ -53,7 +51,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.authSubscription = this.authService.currentUser$.subscribe(user => {
-      this.currentUser = user;
+      this.currentUser = user || null;
       this.isLoggedIn = !!user;
     });
   }

@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
-import { AuthService } from '../services/auth.service';
-import { UserInfo } from '../models/user.model';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +31,7 @@ export class AuthGuard implements CanActivate {
     }
 
     // Not logged in, redirect to login with return URL
-    this.router.navigate(['/admin/login'], {
+    this.router.navigate(['/'], {
       queryParams: {
         returnUrl: state.url !== '/dashboard/default' ? state.url : null
       }

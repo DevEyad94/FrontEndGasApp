@@ -1,4 +1,9 @@
 // Container
+:host {
+  display: block;
+  width: 100%;
+}
+
 .relative {
   position: relative;
 }
@@ -27,6 +32,7 @@
 
 input {
   flex: 1;
+  height: 44px;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
@@ -34,8 +40,8 @@ input {
   }
 
   &:focus {
-    border-color: var(--arabic-green);
-    box-shadow: 0 0 0 2px rgba(var(--arabic-green-rgb), 0.2);
+    border-color: var(--pdo-green);
+    box-shadow: 0 0 0 2px rgba(var(--pdo-green-rgb), 0.2);
   }
 
   &:disabled {

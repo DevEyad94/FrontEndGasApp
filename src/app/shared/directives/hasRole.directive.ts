@@ -8,8 +8,8 @@ import {
 } from "@angular/core";
 import { take, takeUntil } from "rxjs/operators";
 import { Subject } from "rxjs";
-import { AuthService } from "../../core/services/auth.service";
-import { UserInfo } from "../../core/models/user.model";
+import { AuthService } from "../services/auth.service";
+import { User } from "../../models/user.model";
 
 @Directive({
   selector: "[appHasRole]",
@@ -38,7 +38,7 @@ export class HasRoleDirective implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private updateView(user: UserInfo | null | undefined): void {
+  private updateView(user: User | null | undefined): void {
     // Clear view initially
     this.viewContainerRef.clear();
 

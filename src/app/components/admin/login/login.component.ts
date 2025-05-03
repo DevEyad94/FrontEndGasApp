@@ -8,9 +8,8 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { AuthService } from '../../../core/services/auth.service';
-import { UserLogin } from '../../../core/models/user.model';
-
+import { AuthService } from '../../../shared/services/auth.service';
+import { UserLoginDto } from '../../../models/user.model';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -39,7 +38,7 @@ export class LoginComponent {
       this.isLoading = true;
       this.errorMessage = '';
 
-      const loginData: UserLogin = this.loginForm.value;
+      const loginData: UserLoginDto = this.loginForm.value;
 
       this.authService.login(loginData).subscribe({
         next: (response) => {

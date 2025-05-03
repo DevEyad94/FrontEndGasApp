@@ -1,5 +1,11 @@
 // Simplified styles using global variables from styles.scss
 
+// Host container
+:host {
+  display: block;
+  width: 100%;
+}
+
 // Container
 .relative {
   position: relative;
@@ -19,6 +25,7 @@
   color: var(--gray-900);
   border-radius: 0.5rem;
   padding: 0.75rem 1rem;
+  height: 44px;
   border: 1px solid var(--gray-300);
   font-size: 1rem;
   width: 100%;
@@ -111,8 +118,8 @@
   }
 
   &.selected {
-    background-color: var(--arabic-green);
-    color: var(--arabic-white);
+    background-color: var(--pdo-green);
+    color: var(--pdo-white);
   }
 }
 
@@ -138,8 +145,8 @@
   }
 
   &.selected {
-    background-color: var(--arabic-green);
-    color: var(--arabic-white);
+    background-color: var(--pdo-green);
+    color: var(--pdo-white);
   }
 }
 
@@ -170,8 +177,8 @@
 
   &:focus {
     outline: none;
-    border-color: var(--arabic-green);
-    box-shadow: 0 0 0 1px var(--arabic-green);
+    border-color: var(--pdo-green);
+    box-shadow: 0 0 0 1px var(--pdo-green);
   }
 }
 
@@ -261,8 +268,8 @@
   }
 
   &.selected {
-    background-color: var(--arabic-green);
-    color: var(--arabic-white);
+    background-color: var(--pdo-green);
+    color: var(--pdo-white);
     font-weight: 600;
   }
 }
@@ -372,8 +379,8 @@
     }
 
     &:focus {
-      border-color: var(--arabic-green);
-      box-shadow: 0 0 0 1px var(--arabic-green);
+      border-color: var(--pdo-green);
+      box-shadow: 0 0 0 1px var(--pdo-green);
     }
   }
 
@@ -393,8 +400,8 @@
     }
 
     &.selected {
-      background-color: var(--arabic-green);
-      color: var(--arabic-white);
+      background-color: var(--pdo-green);
+      color: var(--pdo-white);
     }
   }
 }

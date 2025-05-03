@@ -10,7 +10,7 @@ import {
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService } from '../services/auth.service';
 import { HasRoleDirective } from '../directives/hasRole.directive';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -185,23 +185,31 @@ export class HeaderComponent implements AfterViewInit, OnInit, OnDestroy {
   initializeDarkMode(): void {
     if (!this.isBrowser) return;
 
-    // Check system preference directly
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-    this.prefersColorSchemeMedia = prefersDark;
+    // Check system preference directly - wrap all window references in isBrowser check
+    try {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+      this.prefersColorSchemeMedia = prefersDark;
 
-    // Set dark mode based on system preference
-    this.darkMode = prefersDark.matches;
-    this.applyDarkMode(this.darkMode);
-
-    // Add listener for system preference changes
-    this.prefersColorSchemeMedia.addEventListener('change', (e) => {
-      this.darkMode = e.matches;
+      // Set dark mode based on system preference
+      this.darkMode = prefersDark.matches;
       this.applyDarkMode(this.darkMode);
-    });
+
+      // Add listener for system preference changes
+      if (this.prefersColorSchemeMedia) {
+        this.prefersColorSchemeMedia.addEventListener('change', (e) => {
+          this.darkMode = e.matches;
+          this.applyDarkMode(this.darkMode);
+        });
+      }
+    } catch (error) {
+      console.error('Error initializing dark mode:', error);
+    }
   }
 
   // Helper method to apply dark mode changes
   private applyDarkMode(isDark: boolean): void {
+    if (!this.isBrowser) return;
+
     if (isDark) {
       document.documentElement.classList.add('dark');
     } else {
@@ -268,6 +276,6 @@ export class HeaderComponent implements AfterViewInit, OnInit, OnDestroy {
     this.authService.logout();
     // Navigate to home page after logout
     this.router.navigate(['/']);
-    // window.location.href = '/'; // Using window.location to force a full page reload
+    // Only use window.location in browser environment
   }
 }

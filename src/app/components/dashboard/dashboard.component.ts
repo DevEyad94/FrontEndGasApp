@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Chart, registerables } from 'chart.js';
 import { forkJoin } from 'rxjs';
-import { GasService } from '../../services/gas.service';
-import { ZskService } from '../../core/services/zsk.service';
+import { GasService } from '../../shared/services/gas.service';
+import { ZskService } from '../../shared/services/zsk.service';
 import { GasField } from '../../models/gas-field.model';
 import { MaintenanceType } from '../../models/maintenance-type.model';
 import { ProductionRecord } from '../../models/production-record.model';
@@ -88,8 +88,8 @@ export class DashboardComponent implements OnInit {
       production: this.gasService.getProductionRecordsWithFilter(productionFilter, 1, 100),
       maintenance: this.gasService.getFieldMaintenancesWithFilter(maintenanceFilter, 1, 100)
     }).subscribe(result => {
-      this.productionRecords = result.production.data;
-      this.maintenanceRecords = result.maintenance.data;
+      // this.productionRecords = result.production.data.result;
+      // this.maintenanceRecords = result.maintenance.data.result;
 
       this.calculateTotals();
       this.renderCharts();

@@ -5,35 +5,33 @@ import { map, take } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { isPlatformBrowser } from '@angular/common';
 import {
-  UserLogin,
-  UserInfo,
-  UserRegister,
-  ChangePassword,
   GenericResponse
-} from '../models/user.model';
-
+} from '../../core/models/user.model';
+import { Router } from '@angular/router';
+import { User, UserLoginDto } from '../../models/user.model';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   baseUrl = environment.apiUrl + 'auth/';
-  private currentUserSource = new ReplaySubject<UserInfo | undefined | null>(1); // Buffer size of 1
+  private currentUserSource = new ReplaySubject<User | undefined | null>(1); // Buffer size of 1
   currentUser$ = this.currentUserSource.asObservable();
   private isBrowser: boolean;
 
   constructor(
     private http: HttpClient,
+    private router: Router,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
     this.loadCurrentUser();
   }
 
-  login(model: UserLogin): Observable<any> {
+  login(model: UserLoginDto): Observable<any> {
     return this.http
-      .post<GenericResponse<UserInfo>>(this.baseUrl + 'login', model)
+      .post<GenericResponse<User>>(this.baseUrl + 'login', model)
       .pipe(
-        map((response: GenericResponse<UserInfo>) => {
+        map((response: GenericResponse<User>) => {
           const user = response;
           if (user.data) {
             if (this.isBrowser) {
@@ -58,7 +56,7 @@ export class AuthService {
       return;
     }
 
-    const user: UserInfo = JSON.parse(userString);
+    const user: User = JSON.parse(userString);
 
     if (user.token && !this.tokenExpired(user.token)) {
       this.setCurrentUser(user);
@@ -81,13 +79,14 @@ export class AuthService {
       localStorage.removeItem('userInfo');
     }
     this.currentUserSource.next(null);
+    this.router.navigate(['/']);
   }
 
-  register(register: UserRegister): Observable<any> {
-    return this.http.post(this.baseUrl + 'register', register);
-  }
+  // register(register: UserRegister): Observable<any> {
+  //   return this.http.post(this.baseUrl + 'register', register);
+  // }
 
-  setCurrentUser(user: UserInfo): void {
+  setCurrentUser(user: User): void {
     this.currentUserSource.next(user);
   }
 
@@ -99,17 +98,17 @@ export class AuthService {
     const userString = localStorage.getItem('userInfo');
     if (!userString) return false;
 
-    const user: UserInfo = JSON.parse(userString);
+    const user: User = JSON.parse(userString);
     return !!user.token && !this.tokenExpired(user.token);
   }
 
-  resetPassword(userLogin: UserLogin): Observable<any> {
+  resetPassword(userLogin: UserLoginDto): Observable<any> {
     return this.http.post(this.baseUrl + 'RestPassword', userLogin);
   }
 
-  changePassword(changePassword: ChangePassword): Observable<any> {
-    return this.http.post(this.baseUrl + 'ChangePassword', changePassword);
-  }
+  // changePassword(changePassword: ChangePassword): Observable<any> {
+  //   return this.http.post(this.baseUrl + 'ChangePassword', changePassword);
+  // }
 
   userExists(userName: string): Observable<any> {
     return this.http.get(this.baseUrl + 'UserExists/' + userName);
@@ -118,7 +117,7 @@ export class AuthService {
   roleMatch(allowedRoles: string[]): boolean {
     let isMatch = false;
     if (allowedRoles) {
-      let userInfo: UserInfo | undefined | null;
+      let userInfo: User | undefined | null;
       this.currentUser$.pipe(take(1)).subscribe((user) => {
         userInfo = user;
         if (userInfo?.token) {

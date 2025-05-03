@@ -47,62 +47,18 @@
         [name]="name"
         [placeholder]="placeholder | translate"
         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-pdo-green focus:border-pdo-green dark:bg-gray-700 dark:text-white"
-        [ngClass]="{
-          'border-red-500': formControl?.errors
-        }"
+        [ngClass]="{'border-red-500': hasErrors && touched}"
+        [(ngModel)]="value"
         (input)="onInputChange($event)"
         (blur)="onTouched()"
-        [formControl]="formControl"
+        [disabled]="disabled"
+        [attr.required]="required"
       />
     </div>
   </div>
 
   <!-- Error Message -->
-  <div *ngIf="formControl" class="mt-1 text-sm text-red-600">
-    <!-- Required validation -->
-
-    <span *ngIf="formControl?.errors?.['required']">
-      {{ "VALIDATION.REQUIRED" | translate }}
-    </span>
-
-    <!-- Min length validation -->
-    <span *ngIf="formControl?.errors?.['minlength']">
-      {{ "VALIDATION.MIN_LENGTH" | translate: { requiredLength: formControl?.errors?.['minlength']?.requiredLength } }}
-    </span>
-
-    <!-- Max length validation -->
-    <span *ngIf="formControl?.errors?.['maxlength']">
-      {{ "VALIDATION.MAX_LENGTH" | translate: { requiredLength: formControl?.errors?.['maxlength']?.requiredLength } }}
-    </span>
-
-    <!-- Email validation -->
-    <span *ngIf="formControl?.errors?.['email']">
-      {{ "VALIDATION.EMAIL" | translate }}
-    </span>
-
-    <!-- Pattern validation -->
-    <span *ngIf="formControl?.errors?.['pattern']">
-      {{ "VALIDATION.PATTERN" | translate }}
-    </span>
-
-    <!-- Min validation -->
-    <span *ngIf="formControl?.errors?.['min']">
-      {{ "VALIDATION.MIN" | translate: { min: formControl?.errors?.['min']?.min } }}
-    </span>
-
-    <!-- Max validation -->
-    <span *ngIf="formControl?.errors?.['max']">
-      {{ "VALIDATION.MAX" | translate: { max: formControl?.errors?.['max']?.max } }}
-    </span>
-
-    <!-- Custom validation - use custom error message if none of the above -->
-    <span
-      *ngIf="errorMessage && !formControl?.errors?.['required'] &&
-                !formControl?.errors?.['minlength'] && !formControl?.errors?.['maxlength'] &&
-                !formControl?.errors?.['email'] && !formControl?.errors?.['pattern'] &&
-                !formControl?.errors?.['min'] && !formControl?.errors?.['max']"
-    >
-      {{ errorMessage | translate }}
-    </span>
+  <div *ngIf="hasErrors && touched && errorMessage" class="mt-1 text-sm text-red-600">
+    {{ errorMessage | translate }}
   </div>
 </div>

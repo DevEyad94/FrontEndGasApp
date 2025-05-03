@@ -35,19 +35,3 @@ export interface ProductionRecordFilter {
   maxProductionRate?: number;
   year?: number;
 }
-
-export interface PagedResponse<T> {
-  data: T[];
-  currentPage: number;
-  totalPages: number;
-  pageSize: number;
-  totalCount: number;
-  hasPrevious: boolean;
-  hasNext: boolean;
-}
-
-export interface ServiceResponse<T> {
-  data: T;
-  success: boolean;
-  message: string;
-}

@@ -52,10 +52,14 @@ export class TextAreaComponent implements OnInit, ControlValueAccessor {
 
   value: string = '';
   disabled: boolean = false;
+  touched: boolean = false;
+  hasErrors: boolean = false;
 
   // ControlValueAccessor implementation
   onChange: any = () => {};
-  onTouched: any = () => {};
+  onTouched: any = () => {
+    this.touched = true;
+  };
 
   constructor() {}
 
@@ -66,7 +70,6 @@ export class TextAreaComponent implements OnInit, ControlValueAccessor {
     this.value = textareaElement.value;
     this.valueChanged.emit(this.value);
     this.onChange(this.value);
-    this.onTouched();
   }
 
   // ControlValueAccessor methods

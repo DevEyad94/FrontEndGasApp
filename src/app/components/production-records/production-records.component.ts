@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { GasService } from '../../services/gas.service';
-import { ZskService } from '../../core/services/zsk.service';
+import { GasService } from '../../shared/services/gas.service';
+import { ZskService } from '../../shared/services/zsk.service';
 import { ProductionRecord, AddProductionRecordDto, UpdateProductionRecordDto, ProductionRecordFilter } from '../../models/production-record.model';
 import { GasField } from '../../models/gas-field.model';
 import { forkJoin } from 'rxjs';
+import { Pagination } from '../../core/models/pagination.model';
 
 @Component({
   selector: 'app-production-records',
@@ -17,6 +18,12 @@ import { forkJoin } from 'rxjs';
 export class ProductionRecordsComponent implements OnInit {
   Math = Math;
   productionRecords: ProductionRecord[] = [];
+  pagination: Pagination = {
+    currentPage: 1,
+    itemsPerPage: 10,
+    totalItems: 0,
+    totalPages: 0
+  };
   fields: GasField[] = [];
   recordForm!: FormGroup;
   filterForm!: FormGroup;
@@ -100,9 +107,8 @@ export class ProductionRecordsComponent implements OnInit {
       this.sortDirection
     ).subscribe({
       next: (response) => {
-        this.productionRecords = response.data;
-        this.totalPages = response.totalPages;
-        this.totalRecords = response.totalCount;
+        this.productionRecords = response.result.data || [];
+        this.pagination = response.pagination;
         this.isLoading = false;
       },
       error: (error) => {

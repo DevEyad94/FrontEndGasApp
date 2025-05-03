@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { GenericResponse, PaginatedResult } from '../models/pagination.model';
+import { GenericResponse, PaginatedResult } from '../../core/models/pagination.model';
 import { Grave } from '../models/grave.model';
 import { GraveImagePost, GravePost } from '../models/grave-post.model';
-import { DateFormatterService } from '../../shared/date-formatter.service';
+import { DateFormatterService } from '../date-formatter.service';
 @Injectable({
   providedIn: 'root',
 })

@@ -7,7 +7,15 @@ import { LoginComponent } from './components/admin/login/login.component';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
+    loadComponent: () =>
+      import('./components/admin/login/login.component').then(
+        (m) => m.LoginComponent
+      ),
+    title: 'Login',
+  },
+  {
+    path: '',
+    redirectTo: 'login',
     pathMatch: 'full',
   },
   {
@@ -22,27 +30,25 @@ export const routes: Routes = [
   {
     path: 'map',
     loadComponent: () =>
-      import('./components/map/map.component').then(
-        (m) => m.MapComponent
-      ),
+      import('./components/map/map.component').then((m) => m.MapComponent),
     canActivate: [AuthGuard],
     title: 'Gas Field Map',
   },
   {
     path: 'production',
     loadComponent: () =>
-      import('./components/production-records/production-records.component').then(
-        (m) => m.ProductionRecordsComponent
-      ),
+      import(
+        './components/production-records/production-records.component'
+      ).then((m) => m.ProductionRecordsComponent),
     canActivate: [AuthGuard],
     title: 'Production Records',
   },
   {
     path: 'maintenance',
     loadComponent: () =>
-      import('./components/maintenance-records/maintenance-records.component').then(
-        (m) => m.MaintenanceRecordsComponent
-      ),
+      import(
+        './components/maintenance-records/maintenance-records.component'
+      ).then((m) => m.MaintenanceRecordsComponent),
     canActivate: [AuthGuard],
     title: 'Maintenance Records',
   },
@@ -54,22 +60,7 @@ export const routes: Routes = [
       ),
     title: 'Brand Colors',
   },
-  {
-    path: 'login',
-    loadComponent: () =>
-      import('./components/admin/login/login.component').then(
-        (m) => m.LoginComponent
-      ),
-    title: 'Login',
-  },
-  {
-    path: 'admin/login',
-    loadComponent: () =>
-      import('./components/admin/login/login.component').then(
-        (m) => m.LoginComponent
-      ),
-    title: 'Login',
-  },
+
   // {
   //   path: 'grave/management',
   //   loadComponent: () =>

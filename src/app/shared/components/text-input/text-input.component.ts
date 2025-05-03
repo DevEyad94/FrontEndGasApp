@@ -38,14 +38,18 @@ export class TextInputComponent implements OnInit, ControlValueAccessor {
   | "search"
   | null = "text";
 
-  @Input() formControl: any; // For validation in template
   @Output() valueChanged = new EventEmitter<string>();
 
   value: string = '';
+  disabled: boolean = false;
+  touched: boolean = false;
+  hasErrors: boolean = false;
 
   // ControlValueAccessor implementation
   onChange: any = () => {};
-  onTouched: any = () => {};
+  onTouched: any = () => {
+    this.touched = true;
+  };
 
   constructor() {}
 
@@ -56,7 +60,6 @@ export class TextInputComponent implements OnInit, ControlValueAccessor {
     this.value = inputElement.value;
     this.valueChanged.emit(this.value);
     this.onChange(this.value);
-    this.onTouched();
   }
 
   // ControlValueAccessor methods
@@ -73,11 +76,6 @@ export class TextInputComponent implements OnInit, ControlValueAccessor {
   }
 
   setDisabledState?(isDisabled: boolean): void {
-    // console.log("isDisabled", isDisabled);
-    if (isDisabled) {
-      this.formControl.disable();
-    } else {
-      this.formControl.enable();
-    }
+    this.disabled = isDisabled;
   }
 }

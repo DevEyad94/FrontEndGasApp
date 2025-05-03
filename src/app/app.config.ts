@@ -29,7 +29,8 @@ import { errorInterceptor } from './shared/interceptors/error.interceptor.fn';
 import { jwtInterceptor } from './shared/interceptors/jwt.interceptor.fn';
 import { ToastService } from './shared/services/toast.service';
 import { filter } from 'rxjs/operators';
-import { CustomTitleStrategy } from './core/services/title.strategy';
+import { CustomTitleStrategy } from './shared/services/title.strategy';
+import { AuthService } from './shared/services/auth.service';
 
 // Register locale data
 registerLocaleData(localeEn);
@@ -91,6 +92,8 @@ export const appConfig: ApplicationConfig = {
     ToastService,
     // Make DatePipe available application-wide
     DatePipe,
+
+    AuthService,
     // Provide global locale for date formatting
     { provide: LOCALE_ID, useValue: 'en' },
     {
