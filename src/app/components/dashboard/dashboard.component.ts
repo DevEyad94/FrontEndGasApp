@@ -98,7 +98,7 @@ export class DashboardComponent implements OnInit {
     if (this.dashboardData) {
       this.totalProductionRate = this.dashboardData.totalProductionRate;
       this.totalMaintenanceCost = this.dashboardData.totalMaintenanceCost;
-      this.fieldCount = this.dashboardData.fieldData.length;
+      this.fieldCount = this.dashboardData.regionDistribution[0].fieldCount;
     }
   }
 
@@ -114,6 +114,7 @@ export class DashboardComponent implements OnInit {
     const data = this.dashboardData.productionRateChart;
 
     this.productionChartOption = {
+      backgroundColor: 'transparent',
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -130,12 +131,34 @@ export class DashboardComponent implements OnInit {
         type: 'category',
         data: data.map(item => item.period),
         axisLabel: {
-          rotate: 45
+          rotate: 45,
+          color: '#333'
+        },
+        axisLine: {
+          lineStyle: {
+            color: '#ccc'
+          }
         }
       },
       yAxis: {
         type: 'value',
-        name: 'Production Rate'
+        name: 'Production Rate',
+        nameTextStyle: {
+          color: '#333'
+        },
+        axisLabel: {
+          color: '#333'
+        },
+        axisLine: {
+          lineStyle: {
+            color: '#ccc'
+          }
+        },
+        splitLine: {
+          lineStyle: {
+            color: '#eee'
+          }
+        }
       },
       series: [
         {
@@ -156,6 +179,7 @@ export class DashboardComponent implements OnInit {
     const data = this.dashboardData.maintenanceCostChart;
 
     this.maintenanceCostChartOption = {
+      backgroundColor: 'transparent',
       tooltip: {
         trigger: 'axis',
         formatter: '{a} <br/>{b}: ${c}'
@@ -170,12 +194,34 @@ export class DashboardComponent implements OnInit {
         type: 'category',
         data: data.map(item => item.period),
         axisLabel: {
-          rotate: 45
+          rotate: 45,
+          color: '#333'
+        },
+        axisLine: {
+          lineStyle: {
+            color: '#ccc'
+          }
         }
       },
       yAxis: {
         type: 'value',
-        name: 'Maintenance Cost ($)'
+        name: 'Maintenance Cost ($)',
+        nameTextStyle: {
+          color: '#333'
+        },
+        axisLabel: {
+          color: '#333'
+        },
+        axisLine: {
+          lineStyle: {
+            color: '#ccc'
+          }
+        },
+        splitLine: {
+          lineStyle: {
+            color: '#eee'
+          }
+        }
       },
       series: [
         {
@@ -215,6 +261,7 @@ export class DashboardComponent implements OnInit {
     const data = this.dashboardData.regionDistribution;
 
     this.fieldDistributionChartOption = {
+      backgroundColor: 'transparent',
       tooltip: {
         trigger: 'item',
         formatter: '{a} <br/>{b}: {c} fields ({d}%)'
@@ -223,7 +270,10 @@ export class DashboardComponent implements OnInit {
         orient: 'vertical',
         right: 10,
         top: 'center',
-        data: data.map(item => item.regionName)
+        data: data.map(item => item.regionName),
+        textStyle: {
+          color: '#333'
+        }
       },
       series: [
         {
@@ -235,6 +285,9 @@ export class DashboardComponent implements OnInit {
             name: item.regionName,
             value: item.fieldCount
           })),
+          label: {
+            color: '#333'
+          },
           emphasis: {
             itemStyle: {
               shadowBlur: 10,
