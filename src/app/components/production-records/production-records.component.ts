@@ -1,21 +1,45 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { GasService } from '../../shared/services/gas.service';
 import { ZskService } from '../../shared/services/zsk.service';
-import { ProductionRecord, AddProductionRecordDto, UpdateProductionRecordDto, ProductionRecordFilter } from '../../models/production-record.model';
+import {
+  ProductionRecord,
+  AddProductionRecordDto,
+  UpdateProductionRecordDto,
+  ProductionRecordFilter
+} from '../../models/production-record.model';
 import { GasField } from '../../models/gas-field.model';
-import { forkJoin } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+import { TextInputComponent } from '../../shared/components/text-input/text-input.component';
+import { TextAreaComponent } from '../../shared/components/text-area/text-area.component';
+import { DatePickerComponent } from '../../shared/components/date-picker/date-picker.component';
+import { LabelComponent } from '../../shared/components/label/label.component';
+import { ZskSelectComponent } from '../../shared/components/zsk/zsk-select.component';
 import { Pagination } from '../../core/models/pagination.model';
 
 @Component({
   selector: 'app-production-records',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TextInputComponent,
+    TextAreaComponent,
+    DatePickerComponent,
+    LabelComponent,
+    ZskSelectComponent,
+  ],
   templateUrl: './production-records.component.html',
   styleUrls: ['./production-records.component.scss']
 })
-export class ProductionRecordsComponent implements OnInit {
+export class ProductionRecordsComponent implements OnInit, OnDestroy {
   Math = Math;
   productionRecords: ProductionRecord[] = [];
   pagination: Pagination = {
@@ -33,12 +57,6 @@ export class ProductionRecordsComponent implements OnInit {
   isFormVisible = false;
   isSubmitting = false;
 
-  // Pagination
-  currentPage = 1;
-  pageSize = 10;
-  totalPages = 0;
-  totalRecords = 0;
-
   // Sort
   sortColumn = 'dateOfProduction';
   sortDirection = 'desc';
@@ -47,16 +65,27 @@ export class ProductionRecordsComponent implements OnInit {
   selectedFile: File | null = null;
   importMessage = '';
 
+  private subscriptions: Subscription[] = [];
+
+  // Add property to store cached options
+  private fieldOptions: {value: number, label: string}[] = [];
+
   constructor(
     private gasService: GasService,
-    private lookupService: ZskService,
+    private zskService: ZskService,
     private fb: FormBuilder
   ) { }
 
   ngOnInit(): void {
     this.initForms();
+
+    // Load filter options
     this.loadFilterOptions();
-    this.loadRecords();
+
+    // Load records with a small delay to give the browser time to render the UI
+    setTimeout(() => {
+      this.loadRecords();
+    }, 100);
   }
 
   initForms(): void {
@@ -78,16 +107,26 @@ export class ProductionRecordsComponent implements OnInit {
       year: [null]
     });
 
-    this.filterForm.valueChanges.subscribe(() => {
-      this.currentPage = 1;
-      this.loadRecords();
-    });
+    const filterSubscription = this.filterForm.valueChanges
+      .pipe(debounceTime(500))
+      .subscribe(() => {
+        this.pagination.currentPage = 1;
+        this.loadRecords();
+      });
+
+    this.subscriptions.push(filterSubscription);
   }
 
   loadFilterOptions(): void {
-    this.lookupService.getFields().subscribe({
+    this.zskService.getFields().subscribe({
       next: (fields) => {
         this.fields = fields;
+
+        // Cache the options immediately
+        this.fieldOptions = this.fields.map((field) => ({
+          value: field.zFieldId,
+          label: field.name,
+        }));
       },
       error: (error) => {
         console.error('Error fetching fields:', error);
@@ -101,8 +140,8 @@ export class ProductionRecordsComponent implements OnInit {
 
     this.gasService.getProductionRecordsWithFilter(
       filters,
-      this.currentPage,
-      this.pageSize,
+      this.pagination.currentPage,
+      this.pagination.itemsPerPage,
       this.sortColumn,
       this.sortDirection
     ).subscribe({
@@ -119,7 +158,7 @@ export class ProductionRecordsComponent implements OnInit {
   }
 
   onPageChange(page: number): void {
-    this.currentPage = page;
+    this.pagination.currentPage = page;
     this.loadRecords();
   }
 
@@ -133,9 +172,12 @@ export class ProductionRecordsComponent implements OnInit {
     this.loadRecords();
   }
 
-  toggleForm(): void {
+  toggleForm(isNew: boolean | null = false): void {
     this.isFormVisible = !this.isFormVisible;
+
     if (this.isFormVisible && !this.isEditMode) {
+      this.resetForm();
+    } else if (!this.isFormVisible) {
       this.resetForm();
     }
   }
@@ -208,7 +250,11 @@ export class ProductionRecordsComponent implements OnInit {
   editRecord(record: ProductionRecord): void {
     this.isEditMode = true;
     this.selectedRecord = record;
-    this.isFormVisible = true;
+
+    // Set form visible without toggling if not already visible
+    if (!this.isFormVisible) {
+      this.isFormVisible = true;
+    }
 
     this.recordForm.patchValue({
       productionRecordGuid: record.productionRecordGuid,
@@ -284,5 +330,14 @@ export class ProductionRecordsComponent implements OnInit {
         this.markFormGroupTouched(control);
       }
     });
+  }
+
+  // Helper methods for select options
+  getFieldOptions() {
+    return this.fieldOptions;
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 }

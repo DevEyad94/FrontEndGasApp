@@ -24,69 +24,51 @@
       <input type="hidden" formControlName="productionRecordGuid">
 
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-          Date of Production*
-        </label>
-        <input
-          type="date"
+        <app-label [label]="'Date of Production'" [required]="true"></app-label>
+        <app-date-picker
+          [placeholder]="'Select date'"
+          [required]="true"
+          [errorMessage]="'Date is required'"
           formControlName="dateOfProduction"
-          class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-          [ngClass]="{'border-red-500': recordForm.get('dateOfProduction')?.invalid && recordForm.get('dateOfProduction')?.touched}"
-        >
-        <div *ngIf="recordForm.get('dateOfProduction')?.invalid && recordForm.get('dateOfProduction')?.touched" class="mt-1 text-sm text-red-600">
-          Date is required
-        </div>
+        ></app-date-picker>
       </div>
 
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-          Field*
-        </label>
-        <select
+        <app-zsk-select
+          [label]="'Field'"
+          [required]="true"
+          [placeholder]="'Select field'"
+          [options]="getFieldOptions()"
           formControlName="zFieldId"
-          class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-          [ngClass]="{'border-red-500': recordForm.get('zFieldId')?.invalid && recordForm.get('zFieldId')?.touched}"
-        >
-          <option [ngValue]="null" disabled>Select a field</option>
-          <option *ngFor="let field of fields" [ngValue]="field.zFieldId">
-            {{ field.name }}
-          </option>
-        </select>
-        <div *ngIf="recordForm.get('zFieldId')?.invalid && recordForm.get('zFieldId')?.touched" class="mt-1 text-sm text-red-600">
-          Field is required
-        </div>
+          [id]="'field'"
+          [name]="'field'"
+        ></app-zsk-select>
       </div>
 
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-          Production Rate*
-        </label>
-        <input
-          type="number"
+        <app-text-input
+          [label]="'Production Rate'"
+          [required]="true"
+          [type]="'number'"
+          [placeholder]="'Enter production rate'"
           formControlName="productionRate"
-          class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-          [ngClass]="{'border-red-500': recordForm.get('productionRate')?.invalid && recordForm.get('productionRate')?.touched}"
-        >
-        <div *ngIf="recordForm.get('productionRate')?.invalid && recordForm.get('productionRate')?.touched" class="mt-1 text-sm text-red-600">
-          <span *ngIf="recordForm.get('productionRate')?.errors?.['required']">Production rate is required</span>
-          <span *ngIf="recordForm.get('productionRate')?.errors?.['min']">Production rate must be positive</span>
-        </div>
+          [id]="'productionRate'"
+          [name]="'productionRate'"
+          [errorMessage]="'Production rate is required'"
+        ></app-text-input>
       </div>
 
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-          Production Cost*
-        </label>
-        <input
-          type="number"
+        <app-text-input
+          [label]="'Production Cost'"
+          [required]="true"
+          [type]="'number'"
+          [placeholder]="'Enter cost'"
           formControlName="productionOfCost"
-          class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-          [ngClass]="{'border-red-500': recordForm.get('productionOfCost')?.invalid && recordForm.get('productionOfCost')?.touched}"
-        >
-        <div *ngIf="recordForm.get('productionOfCost')?.invalid && recordForm.get('productionOfCost')?.touched" class="mt-1 text-sm text-red-600">
-          <span *ngIf="recordForm.get('productionOfCost')?.errors?.['required']">Production cost is required</span>
-          <span *ngIf="recordForm.get('productionOfCost')?.errors?.['min']">Production cost must be positive</span>
-        </div>
+          [id]="'productionOfCost'"
+          [name]="'productionOfCost'"
+          [errorMessage]="'Production cost is required'"
+        ></app-text-input>
       </div>
 
       <div class="md:col-span-2 flex justify-end">
@@ -114,64 +96,54 @@
 
     <form [formGroup]="filterForm" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search</label>
-        <input
-          type="text"
+        <app-text-input
+          [label]="'Search'"
+          [placeholder]="'Search...'"
           formControlName="search"
-          placeholder="Search..."
-          class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-        >
+        ></app-text-input>
       </div>
 
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Field</label>
-        <select
+        <app-zsk-select
+          [label]="'Field'"
+          [placeholder]="'All fields'"
+          [options]="getFieldOptions()"
           formControlName="zFieldId"
-          class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-        >
-          <option [ngValue]="null">All Fields</option>
-          <option *ngFor="let field of fields" [ngValue]="field.zFieldId">
-            {{ field.name }}
-          </option>
-        </select>
+        ></app-zsk-select>
       </div>
 
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Start Date</label>
-        <input
-          type="date"
+        <app-label [label]="'Start Date'"></app-label>
+        <app-date-picker
+          [placeholder]="'Select start date'"
           formControlName="startDate"
-          class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-        >
+        ></app-date-picker>
       </div>
 
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">End Date</label>
-        <input
-          type="date"
+        <app-label [label]="'End Date'"></app-label>
+        <app-date-picker
+          [placeholder]="'Select end date'"
           formControlName="endDate"
-          class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-        >
+        ></app-date-picker>
       </div>
 
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Min Rate</label>
-        <input
-          type="number"
+        <app-text-input
+          [label]="'Min Production Rate'"
+          [type]="'number'"
+          [placeholder]="'Min'"
           formControlName="minProductionRate"
-          placeholder="Minimum"
-          class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-        >
+        ></app-text-input>
       </div>
 
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Year</label>
-        <input
-          type="number"
+        <app-text-input
+          [label]="'Year'"
+          [type]="'number'"
+          [placeholder]="'YYYY'"
           formControlName="year"
-          placeholder="YYYY"
-          class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-        >
+        ></app-text-input>
       </div>
     </form>
   </div>
@@ -245,7 +217,7 @@
               Loading...
             </td>
           </tr>
-          <tr *ngIf="!isLoading && productionRecords.length === 0" class="hover:bg-gray-100 dark:hover:bg-gray-600">
+          <tr *ngIf="!isLoading && (!productionRecords || productionRecords.length === 0)" class="hover:bg-gray-100 dark:hover:bg-gray-600">
             <td colspan="5" class="px-6 py-4 whitespace-nowrap text-center text-gray-500 dark:text-gray-300">
               No records found
             </td>
@@ -285,21 +257,21 @@
     <!-- Pagination -->
     <div class="px-6 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-600">
       <div class="text-sm text-gray-700 dark:text-gray-300">
-        Showing <span class="font-medium">{{ (currentPage - 1) * pageSize + 1 }}</span> to
-        <span class="font-medium">{{ Math.min(currentPage * pageSize, totalRecords) }}</span> of
-        <span class="font-medium">{{ totalRecords }}</span> results
+        Showing <span class="font-medium">{{ (pagination.currentPage - 1) * pagination.itemsPerPage + 1 }}</span> to
+        <span class="font-medium">{{ Math.min(pagination.currentPage * pagination.itemsPerPage, pagination.totalItems) }}</span> of
+        <span class="font-medium">{{ pagination.totalItems }}</span> results
       </div>
       <div class="flex space-x-2">
         <button
-          (click)="onPageChange(currentPage - 1)"
-          [disabled]="currentPage === 1"
+          (click)="onPageChange(pagination.currentPage - 1)"
+          [disabled]="pagination.currentPage === 1"
           class="px-3 py-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600 disabled:opacity-50"
         >
           Previous
         </button>
         <button
-          (click)="onPageChange(currentPage + 1)"
-          [disabled]="currentPage === totalPages"
+          (click)="onPageChange(pagination.currentPage + 1)"
+          [disabled]="pagination.currentPage === pagination.totalPages"
           class="px-3 py-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600 disabled:opacity-50"
         >
           Next
