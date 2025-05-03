@@ -24,6 +24,8 @@ import { DatePickerComponent } from '../../shared/components/date-picker/date-pi
 import { LabelComponent } from '../../shared/components/label/label.component';
 import { ZskSelectComponent } from '../../shared/components/zsk/zsk-select.component';
 import { Pagination } from '../../core/models/pagination.model';
+import { ToastService } from '../../shared/services/toast.service';
+import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-maintenance-records',
@@ -36,6 +38,7 @@ import { Pagination } from '../../core/models/pagination.model';
     DatePickerComponent,
     LabelComponent,
     ZskSelectComponent,
+    ConfirmDialogComponent
   ],
   templateUrl: './maintenance-records.component.html',
   styleUrls: ['./maintenance-records.component.scss'],
@@ -70,10 +73,15 @@ export class MaintenanceRecordsComponent implements OnInit, OnDestroy {
   private maintenanceTypeOptions: {value: number, label: string}[] = [];
   private fieldOptions: {value: number, label: string}[] = [];
 
+  // Delete confirmation properties
+  showDeleteConfirmation = false;
+  recordToDelete: FieldMaintenance | null = null;
+
   constructor(
     private gasService: GasService,
     private zskService: ZskService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -140,6 +148,7 @@ export class MaintenanceRecordsComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error fetching filter options:', error);
+        this.toastService.error('Failed to load filter options. Please try again later.');
       },
     });
   }
@@ -163,6 +172,7 @@ export class MaintenanceRecordsComponent implements OnInit, OnDestroy {
         error: (error) => {
           console.error('Error fetching maintenance records:', error);
           this.isLoading = false;
+          this.toastService.error('Failed to load maintenance records. Please try again later.');
         },
       });
   }
@@ -208,6 +218,7 @@ export class MaintenanceRecordsComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     if (this.recordForm.invalid) {
       this.markFormGroupTouched(this.recordForm);
+      this.toastService.warning('Please fill in all required fields correctly.');
       return;
     }
 
@@ -226,11 +237,12 @@ export class MaintenanceRecordsComponent implements OnInit, OnDestroy {
 
       this.gasService.updateFieldMaintenance(updateData).subscribe({
         next: () => {
-          this.onSubmitSuccess();
+          this.onSubmitSuccess('Maintenance record updated successfully!');
         },
         error: (error) => {
           console.error('Error updating maintenance record:', error);
           this.isSubmitting = false;
+          this.toastService.error('Failed to update maintenance record. Please try again.');
         },
       });
     } else {
@@ -244,21 +256,23 @@ export class MaintenanceRecordsComponent implements OnInit, OnDestroy {
 
       this.gasService.addFieldMaintenance(newData).subscribe({
         next: () => {
-          this.onSubmitSuccess();
+          this.onSubmitSuccess('Maintenance record added successfully!');
         },
         error: (error) => {
           console.error('Error adding maintenance record:', error);
           this.isSubmitting = false;
+          this.toastService.error('Failed to add maintenance record. Please try again.');
         },
       });
     }
   }
 
-  onSubmitSuccess(): void {
+  onSubmitSuccess(message: string): void {
     this.loadRecords();
     this.resetForm();
     this.isFormVisible = false;
     this.isSubmitting = false;
+    this.toastService.success(message);
   }
 
   editRecord(record: FieldMaintenance): void {
@@ -282,23 +296,41 @@ export class MaintenanceRecordsComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteRecord(record: FieldMaintenance): void {
-    if (
-      confirm(
-        `Are you sure you want to delete this maintenance record for ${record.fieldName}?`
-      )
-    ) {
-      this.gasService
-        .deleteFieldMaintenance(record.fieldMaintenanceGuid)
-        .subscribe({
-          next: () => {
-            this.loadRecords();
-          },
-          error: (error) => {
-            console.error('Error deleting maintenance record:', error);
-          },
-        });
+  showDeleteConfirmationDialog(record: FieldMaintenance): void {
+    this.recordToDelete = record;
+    this.showDeleteConfirmation = true;
+  }
+
+  onConfirmDelete(): void {
+    if (this.recordToDelete) {
+      this.performDeleteRecord(this.recordToDelete);
     }
+    this.showDeleteConfirmation = false;
+    this.recordToDelete = null;
+  }
+
+  onCancelDelete(): void {
+    this.showDeleteConfirmation = false;
+    this.recordToDelete = null;
+  }
+
+  deleteRecord(record: FieldMaintenance): void {
+    this.showDeleteConfirmationDialog(record);
+  }
+
+  performDeleteRecord(record: FieldMaintenance): void {
+    this.gasService
+      .deleteFieldMaintenance(record.fieldMaintenanceGuid)
+      .subscribe({
+        next: () => {
+          this.loadRecords();
+          this.toastService.success(`Maintenance record for ${record.fieldName} has been deleted.`);
+        },
+        error: (error) => {
+          console.error('Error deleting maintenance record:', error);
+          this.toastService.error('Failed to delete maintenance record. Please try again.');
+        },
+      });
   }
 
   formatDateForInput(dateString: string): string {

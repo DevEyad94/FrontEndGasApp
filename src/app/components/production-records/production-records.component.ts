@@ -23,6 +23,8 @@ import { DatePickerComponent } from '../../shared/components/date-picker/date-pi
 import { LabelComponent } from '../../shared/components/label/label.component';
 import { ZskSelectComponent } from '../../shared/components/zsk/zsk-select.component';
 import { Pagination } from '../../core/models/pagination.model';
+import { ToastService } from '../../shared/services/toast.service';
+import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-production-records',
@@ -35,6 +37,7 @@ import { Pagination } from '../../core/models/pagination.model';
     DatePickerComponent,
     LabelComponent,
     ZskSelectComponent,
+    ConfirmDialogComponent
   ],
   templateUrl: './production-records.component.html',
   styleUrls: ['./production-records.component.scss']
@@ -70,10 +73,15 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
   // Add property to store cached options
   private fieldOptions: {value: number, label: string}[] = [];
 
+  // Delete confirmation properties
+  showDeleteConfirmation = false;
+  recordToDelete: ProductionRecord | null = null;
+
   constructor(
     private gasService: GasService,
     private zskService: ZskService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private toastService: ToastService
   ) { }
 
   ngOnInit(): void {
@@ -130,6 +138,7 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error fetching fields:', error);
+        this.toastService.error('Failed to load fields. Please try again later.');
       }
     });
   }
@@ -153,6 +162,7 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
       error: (error) => {
         console.error('Error fetching production records:', error);
         this.isLoading = false;
+        this.toastService.error('Failed to load production records. Please try again later.');
       }
     });
   }
@@ -196,6 +206,7 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     if (this.recordForm.invalid) {
       this.markFormGroupTouched(this.recordForm);
+      this.toastService.warning('Please fill in all required fields correctly.');
       return;
     }
 
@@ -213,11 +224,12 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
 
       this.gasService.updateProductionRecord(updateData).subscribe({
         next: () => {
-          this.onSubmitSuccess();
+          this.onSubmitSuccess('Production record updated successfully!');
         },
         error: (error) => {
           console.error('Error updating record:', error);
           this.isSubmitting = false;
+          this.toastService.error('Failed to update production record. Please try again.');
         }
       });
     } else {
@@ -230,21 +242,23 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
 
       this.gasService.addProductionRecord(newData).subscribe({
         next: () => {
-          this.onSubmitSuccess();
+          this.onSubmitSuccess('Production record added successfully!');
         },
         error: (error) => {
           console.error('Error adding record:', error);
           this.isSubmitting = false;
+          this.toastService.error('Failed to add production record. Please try again.');
         }
       });
     }
   }
 
-  onSubmitSuccess(): void {
+  onSubmitSuccess(message: string): void {
     this.loadRecords();
     this.resetForm();
     this.isFormVisible = false;
     this.isSubmitting = false;
+    this.toastService.success(message);
   }
 
   editRecord(record: ProductionRecord): void {
@@ -265,17 +279,39 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteRecord(record: ProductionRecord): void {
-    if (confirm(`Are you sure you want to delete the production record for ${record.fieldName}?`)) {
-      this.gasService.deleteProductionRecord(record.productionRecordGuid).subscribe({
-        next: () => {
-          this.loadRecords();
-        },
-        error: (error) => {
-          console.error('Error deleting record:', error);
-        }
-      });
+  showDeleteConfirmationDialog(record: ProductionRecord): void {
+    this.recordToDelete = record;
+    this.showDeleteConfirmation = true;
+  }
+
+  onConfirmDelete(): void {
+    if (this.recordToDelete) {
+      this.performDeleteRecord(this.recordToDelete);
     }
+    this.showDeleteConfirmation = false;
+    this.recordToDelete = null;
+  }
+
+  onCancelDelete(): void {
+    this.showDeleteConfirmation = false;
+    this.recordToDelete = null;
+  }
+
+  deleteRecord(record: ProductionRecord): void {
+    this.showDeleteConfirmationDialog(record);
+  }
+
+  performDeleteRecord(record: ProductionRecord): void {
+    this.gasService.deleteProductionRecord(record.productionRecordGuid).subscribe({
+      next: () => {
+        this.loadRecords();
+        this.toastService.success(`Production record for ${record.fieldName} has been deleted.`);
+      },
+      error: (error) => {
+        console.error('Error deleting record:', error);
+        this.toastService.error('Failed to delete production record. Please try again.');
+      }
+    });
   }
 
   onFileSelected(event: Event): void {
@@ -287,6 +323,7 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
 
   uploadFile(): void {
     if (!this.selectedFile) {
+      this.toastService.warning('Please select a file first.');
       return;
     }
 
@@ -303,11 +340,13 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
         if (fileInput) {
           fileInput.value = '';
         }
+        this.toastService.success(`Successfully imported ${count} production records.`);
       },
       error: (error) => {
         console.error('Error importing records:', error);
         this.importMessage = 'Error importing records. Please check the file format.';
         this.isLoading = false;
+        this.toastService.error('Failed to import records. Please check the file format and try again.');
       }
     });
   }

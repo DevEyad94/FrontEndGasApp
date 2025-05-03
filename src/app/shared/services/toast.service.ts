@@ -90,7 +90,7 @@ export class ToastService {
 
     switch (type) {
       case 'success':
-        bgClass = 'bg-arabic-green-light';
+        bgClass = 'bg-pdo-green-light';
         iconHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" /></svg>';
         break;
       case 'error':
@@ -115,7 +115,7 @@ export class ToastService {
       `flex w-full max-w-md items-center p-4 mb-4 rounded-lg shadow-lg
       transition-all duration-300 ease-in-out transform
       bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100
-      ${type === 'success' ? 'border border-arabic-green/20' : ''} ${rtlClass}`
+      ${type === 'success' ? 'border border-pdo-green/20' : ''} ${rtlClass}`
     );
 
     // Icon container
