@@ -12,6 +12,7 @@ import type { EChartsOption } from 'echarts';
 import { TextInputComponent } from '../../shared/components/text-input/text-input.component';
 import { ZskSelectComponent } from '../../shared/components/zsk/zsk-select.component';
 import { GasField } from '../../models/gas-field.model';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-dashboard',
@@ -44,6 +45,11 @@ export class DashboardComponent implements OnInit {
   totalProductionRate: number = 0;
   totalMaintenanceCost: number = 0;
   fieldCount: number = 0;
+
+  // Export options
+  showExportModal = false;
+  exportFormat: 'pdf' | 'excel' = 'pdf';
+  isExporting = false;
 
   constructor(
     private dashboardService: DashboardService,
@@ -279,5 +285,39 @@ export class DashboardComponent implements OnInit {
         }
       ]
     };
+  }
+
+  // Show export modal
+  openExportModal(): void {
+    this.showExportModal = true;
+  }
+
+  // Close export modal
+  closeExportModal(): void {
+    this.showExportModal = false;
+  }
+
+  // Set export format
+  setExportFormat(format: 'pdf' | 'excel'): void {
+    this.exportFormat = format;
+  }
+
+  // Export dashboard data
+  exportDashboard(): void {
+    this.isExporting = true;
+    const filter: DashboardFilter = this.filterForm?.value || {};
+
+    this.dashboardService.exportDashboardData(filter, this.exportFormat).subscribe({
+      next: (blob) => {
+        const fileName = `dashboard-export-${new Date().toISOString().split('T')[0]}.${this.exportFormat === 'pdf' ? 'pdf' : 'xlsx'}`;
+        saveAs(blob, fileName);
+        this.isExporting = false;
+        this.closeExportModal();
+      },
+      error: (error) => {
+        console.error('Error exporting dashboard data:', error);
+        this.isExporting = false;
+      }
+    });
   }
 }
