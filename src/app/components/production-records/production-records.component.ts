@@ -80,6 +80,9 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
   showDeleteConfirmation = false;
   recordToDelete: ProductionRecord | null = null;
 
+  // Disabled months
+  disabledMonths: { year: number; months: number[] }[] = [];
+
   constructor(
     private gasService: GasService,
     private zskService: ZskService,
@@ -148,6 +151,26 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
     });
   }
 
+  loadDisabledMonths(): void {
+    this.gasService.getDisabledMonths().subscribe({
+      next: (response) => {
+        if (response.data) {
+          // Map API result to the format expected by the date picker
+          this.disabledMonths = response.data.map(dm => ({
+            year: dm.year,
+            months: dm.disabledMonths
+          }));
+        }
+      },
+      error: (error) => {
+        console.error('Error loading disabled months:', error);
+        this.toastService.error(
+          'Failed to load disabled months. Please try again later.'
+        );
+      },
+    });
+  }
+
   loadRecords(): void {
     this.isLoading = true;
     const filters: ProductionRecordFilter = this.filterForm.value;
@@ -193,9 +216,11 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
 
   toggleForm(isNew: boolean | null = false): void {
     this.isFormVisible = !this.isFormVisible;
+    this.loadDisabledMonths();
 
     if (this.isFormVisible && !this.isEditMode) {
       this.resetForm();
+      // Load disabled months
     } else if (!this.isFormVisible) {
       this.resetForm();
     }
@@ -402,6 +427,12 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
   // Helper methods for select options
   getFieldOptions() {
     return this.fieldOptions;
+  }
+
+  // Helper method to check if a month is disabled
+  isMonthDisabled(year: number, month: number): boolean {
+    const yearData = this.disabledMonths.find((dm) => dm.year === year);
+    return yearData ? yearData.months.includes(month) : false;
   }
 
   ngOnDestroy(): void {

@@ -41,6 +41,7 @@
           [required]="true"
           [monthYearOnly]="true"
           [errorMessage]="'Date is required'"
+          [disabledDates]="disabledMonths"
           formControlName="dateOfProduction"
         ></app-date-picker>
       </div>
@@ -251,7 +252,7 @@
             <td
               class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300"
             >
-              {{ record.dateOfProduction | date : "MMM d, yyyy" }}
+              {{ record.dateOfProduction | date : "MMMM, yyyy" }}
             </td>
             <td
               class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white"

@@ -309,4 +309,10 @@ export class GasService {
         `${this.apiUrl}fieldmaintenance/${id}`
       );
   }
+
+  getDisabledMonths(): Observable<GenericResponse<{ year: number; disabledMonths: number[] }[]>> {
+    return this.http.get<GenericResponse<{ year: number; disabledMonths: number[] }[]>>(
+      `${this.apiUrl}productionrecord/disabledmonths`
+    );
+  }
 }
