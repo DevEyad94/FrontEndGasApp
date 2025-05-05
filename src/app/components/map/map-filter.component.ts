@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators } 
 import { DashboardFilter } from '../../models/dashboard.model';
 import { TextInputComponent } from '../../shared/components/text-input/text-input.component';
 import { ZskSelectComponent } from '../../shared/components/zsk/zsk-select.component';
+import { DashboardService } from '../../shared/services/dashboard.service';
 
 @Component({
   selector: 'app-map-filter',
@@ -28,20 +29,16 @@ export class MapFilterComponent implements OnInit, OnChanges {
   yearOptions: { value: any, label: string }[] = [];
 
   filterForm!: FormGroup;
-  years: number[] = [];
   showAdvancedFilters = false;
 
-  constructor(private fb: FormBuilder) {
-    // Generate list of years for dropdown (last 30 years)
-    const currentYear = new Date().getFullYear();
-    for (let i = 0; i < 30; i++) {
-      this.years.push(currentYear - i);
-    }
-  }
+  constructor(
+    private fb: FormBuilder,
+    private dashboardService: DashboardService
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
-    this.prepareYearOptions();
+    this.loadYears();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -54,12 +51,18 @@ export class MapFilterComponent implements OnInit, OnChanges {
     }
   }
 
-  prepareYearOptions(): void {
-    // Convert years to options format
-    this.yearOptions = this.years.map(year => ({
-      value: year,
-      label: year.toString()
-    }));
+  loadYears(): void {
+    this.dashboardService.getYears().subscribe({
+      next: (years) => {
+        this.yearOptions = years.map(year => ({
+          value: year,
+          label: year.toString()
+        }));
+      },
+      error: (error) => {
+        console.error('Error loading years:', error);
+      }
+    });
   }
 
   prepareMaintenanceTypeOptions(): void {

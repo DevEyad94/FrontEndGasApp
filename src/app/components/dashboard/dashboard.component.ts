@@ -33,6 +33,7 @@ export class DashboardComponent implements OnInit {
   maintenanceTypeOptions: { value: any, label: string }[] = [];
   fields: GasField[] = [];
   fieldOptions: { value: any, label: string }[] = [];
+  yearOptions: { value: any, label: string }[] = [];
 
   // Dashboard data
   dashboardData?: DashboardResponse;
@@ -74,7 +75,7 @@ export class DashboardComponent implements OnInit {
     this.filterForm = this.fb.group({
       minProductionRate: [null],
       maxProductionRate: [null],
-      extractionYear: [new Date().getFullYear()],
+      extractionYear: [null],
       fromYear: [null],
       toYear: [null],
       maintenanceTypeId: [null],
@@ -92,7 +93,8 @@ export class DashboardComponent implements OnInit {
   loadFilterOptions(): void {
     forkJoin({
       maintenanceTypes: this.zskService.getMaintenanceTypes(),
-      fields: this.zskService.getFields()
+      fields: this.zskService.getFields(),
+      years: this.dashboardService.getYears()
     }).subscribe(result => {
       // Process maintenance types
       this.maintenanceTypes = result.maintenanceTypes;
@@ -106,6 +108,12 @@ export class DashboardComponent implements OnInit {
       this.fieldOptions = this.fields.map(field => ({
         value: field.zFieldId,
         label: field.name
+      }));
+
+      // Process years
+      this.yearOptions = result.years.map(year => ({
+        value: year,
+        label: year.toString()
       }));
     });
   }

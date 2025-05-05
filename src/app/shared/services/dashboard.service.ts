@@ -107,4 +107,10 @@ export class DashboardService {
       responseType: 'blob'
     });
   }
+
+  getYears(): Observable<number[]> {
+    return this.http.get<GenericResponse<{ year: number }[]>>(`${environment.apiUrl}Gas/years`).pipe(
+      map(response => response.data.map(item => item.year))
+    );
+  }
 }

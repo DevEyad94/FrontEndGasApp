@@ -42,36 +42,36 @@
       </div>
 
       <div>
-        <app-text-input
+        <app-zsk-select
           formControlName="extractionYear"
-          type="number"
           label="Extraction Year"
           id="extractionYear"
           name="extractionYear"
-          inputMode="numeric"
-        ></app-text-input>
+          placeholder="All Years"
+          [options]="yearOptions"
+        ></app-zsk-select>
       </div>
 
       <div>
-        <app-text-input
+        <app-zsk-select
           formControlName="fromYear"
-          type="number"
           label="From Year"
           id="fromYear"
           name="fromYear"
-          inputMode="numeric"
-        ></app-text-input>
+          placeholder="Any Year"
+          [options]="yearOptions"
+        ></app-zsk-select>
       </div>
 
       <div>
-        <app-text-input
+        <app-zsk-select
           formControlName="toYear"
-          type="number"
           label="To Year"
           id="toYear"
           name="toYear"
-          inputMode="numeric"
-        ></app-text-input>
+          placeholder="Any Year"
+          [options]="yearOptions"
+        ></app-zsk-select>
       </div>
 
       <div>

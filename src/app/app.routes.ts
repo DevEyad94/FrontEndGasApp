@@ -12,7 +12,7 @@ export const routes: Routes = [
       import('./components/admin/login/login.component').then(
         (m) => m.LoginComponent
       ),
-    title: 'Login',
+    title: 'Gas Production System - PDO',
   },
   {
     path: '',
