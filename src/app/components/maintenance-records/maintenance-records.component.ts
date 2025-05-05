@@ -245,6 +245,9 @@ export class MaintenanceRecordsComponent implements OnInit, OnDestroy {
 
     this.isEditMode = false;
     this.selectedRecord = null;
+
+    // Enable the date picker control when not in edit mode
+    this.recordForm.get('fieldMaintenanceDate')?.enable();
   }
 
   onSubmit(): void {
@@ -324,14 +327,15 @@ export class MaintenanceRecordsComponent implements OnInit, OnDestroy {
 
     this.recordForm.patchValue({
       fieldMaintenanceGuid: record.fieldMaintenanceGuid,
-      fieldMaintenanceDate: this.formatDateForInput(
-        record.fieldMaintenanceDate
-      ),
+      fieldMaintenanceDate: this.formatDateForInput(record.fieldMaintenanceDate),
       cost: record.cost,
       description: record.description,
       zMaintenanceTypeId: record.zMaintenanceTypeId,
       zFieldId: record.zFieldId,
     });
+
+    // Disable the date picker control in edit mode
+    this.recordForm.get('fieldMaintenanceDate')?.disable();
   }
 
   showDeleteConfirmationDialog(record: FieldMaintenance): void {

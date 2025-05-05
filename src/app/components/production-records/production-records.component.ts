@@ -235,6 +235,9 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
     });
     this.isEditMode = false;
     this.selectedRecord = null;
+
+    // Enable the date picker control when not in edit mode
+    this.recordForm.get('dateOfProduction')?.enable();
   }
 
   onSubmit(): void {
@@ -317,6 +320,9 @@ export class ProductionRecordsComponent implements OnInit, OnDestroy {
       productionRate: record.productionRate,
       zFieldId: record.zFieldId,
     });
+
+    // Disable the date picker control in edit mode
+    this.recordForm.get('dateOfProduction')?.disable();
   }
 
   showDeleteConfirmationDialog(record: ProductionRecord): void {

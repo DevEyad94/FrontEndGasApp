@@ -447,3 +447,10 @@
     min-width: 280px;
   }
 }
+
+.datepicker-dropdown.disabled,
+.date-input-container.disabled {
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.6;
+}

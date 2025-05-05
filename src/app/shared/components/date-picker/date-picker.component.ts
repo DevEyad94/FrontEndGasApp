@@ -33,10 +33,21 @@ export class DatePickerComponent implements OnInit, ControlValueAccessor {
   @Input() disabledDates: DisabledDateRange[] = [];
   @Output() dateSelected = new EventEmitter<Date>();
 
+  @Input()
+  set disabled(value: boolean) {
+    this._disabled = value;
+    if (value) {
+      this.showDatepicker = false; // Close dropdown if disabled
+    }
+  }
+  get disabled(): boolean {
+    return this._disabled;
+  }
+  private _disabled = false;
+
   showDatepicker: boolean = false;
   selectedDate: Date | null = null;
   displayValue: string = '';
-  disabled: boolean = false;
   touched: boolean = false;
   hasErrors: boolean = false;
 
@@ -386,6 +397,9 @@ export class DatePickerComponent implements OnInit, ControlValueAccessor {
 
   setDisabledState?(isDisabled: boolean): void {
     this.disabled = isDisabled;
+    if (isDisabled) {
+      this.showDatepicker = false;
+    }
   }
 
   // View mode switching
