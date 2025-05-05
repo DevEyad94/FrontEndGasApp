@@ -57,6 +57,8 @@
     "TODAY": "اليوم",
     "CLEAR": "مسح",
     "SELECT_DATE": "اختر التاريخ",
+    "SELECT_MONTH_YEAR": "اختر الشهر والسنة",
+    "CURRENT_MONTH": "الشهر الحالي",
     "DAYS": {
       "SUNDAY": "ح",
       "MONDAY": "ن",

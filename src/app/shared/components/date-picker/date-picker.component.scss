@@ -99,15 +99,15 @@
 // Month grid
 .month-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(4, 1fr);
   gap: 0.5rem;
   padding: 1rem;
 }
 
 .month-item {
   text-align: center;
-  padding: 1rem 0.5rem;
+  padding: 0.75rem 0.5rem;
   border-radius: 0.25rem;
   cursor: pointer;
   font-weight: 500;
@@ -120,6 +120,18 @@
   &.selected {
     background-color: var(--pdo-green);
     color: var(--pdo-white);
+  }
+
+  &.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: var(--gray-100);
+    color: var(--gray-500);
+
+    &:hover {
+      background-color: var(--gray-100);
+    }
   }
 }
 
@@ -147,6 +159,18 @@
   &.selected {
     background-color: var(--pdo-green);
     color: var(--pdo-white);
+  }
+
+  &.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: var(--gray-100);
+    color: var(--gray-500);
+
+    &:hover {
+      background-color: var(--gray-100);
+    }
   }
 }
 
@@ -402,6 +426,16 @@
     &.selected {
       background-color: var(--pdo-green);
       color: var(--pdo-white);
+    }
+
+    &.disabled {
+      opacity: 0.4;
+      background-color: var(--gray-800);
+      color: var(--gray-600);
+
+      &:hover {
+        background-color: var(--gray-800);
+      }
     }
   }
 }

@@ -3,6 +3,14 @@ import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 
+export interface DisabledDateRange {
+  year: number;        // Year to disable
+  month?: number;      // Optional: specific month in this year (0-11)
+  startMonth?: number; // Optional: range start month
+  endMonth?: number;   // Optional: range end month
+  months?: number[];   // Optional: array of specific months to disable (0-11)
+}
+
 @Component({
   selector: 'app-date-picker',
   standalone: true,
@@ -21,6 +29,8 @@ export class DatePickerComponent implements OnInit, ControlValueAccessor {
   @Input() placeholder: string = 'Select date';
   @Input() required: boolean = false;
   @Input() errorMessage: string = '';
+  @Input() monthYearOnly: boolean = false;
+  @Input() disabledDates: DisabledDateRange[] = [];
   @Output() dateSelected = new EventEmitter<Date>();
 
   showDatepicker: boolean = false;
@@ -130,7 +140,10 @@ export class DatePickerComponent implements OnInit, ControlValueAccessor {
       this.currentMonth = this.selectedDate || new Date();
       this.currentMonthIndex = this.currentMonth.getMonth();
       this.currentYear = this.currentMonth.getFullYear();
-      this.viewMode = 'days';
+
+      // If month-year only mode, start with months view
+      this.viewMode = this.monthYearOnly ? 'months' : 'days';
+
       this.generateCalendar();
     }
   }
@@ -277,6 +290,11 @@ export class DatePickerComponent implements OnInit, ControlValueAccessor {
     // Set to noon to avoid timezone issues
     today.setHours(12, 0, 0, 0);
 
+    if (this.monthYearOnly) {
+      // When in month-year only mode, set day to 1 (first of the month)
+      today.setDate(1);
+    }
+
     this.selectedDate = today;
     this.updateDisplayValue();
     this.dateSelected.emit(this.selectedDate);
@@ -318,8 +336,13 @@ export class DatePickerComponent implements OnInit, ControlValueAccessor {
 
     const year = d.getFullYear();
     const month = (d.getMonth() + 1).toString().padStart(2, '0');
-    const day = d.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
+
+    if (this.monthYearOnly) {
+      return `${year}-${month}`;
+    } else {
+      const day = d.getDate().toString().padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
   }
 
   // ControlValueAccessor methods
@@ -404,15 +427,90 @@ export class DatePickerComponent implements OnInit, ControlValueAccessor {
     this.generateDisplayedYears();
   }
 
+  // Check if a month-year combination is disabled
+  isMonthDisabled(monthIndex: number): boolean {
+    if (!this.disabledDates || this.disabledDates.length === 0) {
+      return false;
+    }
+
+    return this.disabledDates.some(range => {
+      if (range.year !== this.currentYear) {
+        return false;
+      }
+
+      // Specific month
+      if (range.month !== undefined) {
+        return range.month === monthIndex;
+      }
+
+      // Array of specific months
+      if (range.months && range.months.length > 0) {
+        return range.months.includes(monthIndex);
+      }
+
+      // Month range
+      if (range.startMonth !== undefined && range.endMonth !== undefined) {
+        return monthIndex >= range.startMonth && monthIndex <= range.endMonth;
+      }
+
+      // If only year is specified (entire year is disabled)
+      return range.month === undefined &&
+             range.startMonth === undefined &&
+             range.endMonth === undefined &&
+             !range.months;
+    });
+  }
+
+  // Check if a year is disabled
+  isYearDisabled(year: number): boolean {
+    if (!this.disabledDates || this.disabledDates.length === 0) {
+      return false;
+    }
+
+    return this.disabledDates.some(range => {
+      // If entire year is disabled (no specific months)
+      return range.year === year &&
+             range.month === undefined &&
+             range.startMonth === undefined &&
+             range.endMonth === undefined &&
+             !range.months;
+    });
+  }
+
   // Selection in different views
   selectMonth(monthIndex: number): void {
+    // Don't allow selection of disabled months
+    if (this.isMonthDisabled(monthIndex)) {
+      return;
+    }
+
     this.currentMonthIndex = monthIndex;
     this.currentMonth = new Date(this.currentYear, this.currentMonthIndex, 1);
-    this.generateCalendar();
-    this.viewMode = 'days';
+
+    if (this.monthYearOnly) {
+      // If month-year only mode, select the date immediately after month selection
+      const selectedDate = new Date(this.currentYear, this.currentMonthIndex, 1);
+      selectedDate.setHours(12, 0, 0, 0);
+
+      this.selectedDate = selectedDate;
+      this.updateDisplayValue();
+      this.dateSelected.emit(this.selectedDate);
+      this.onChange(this.selectedDate);
+      this.onTouched();
+      this.showDatepicker = false;
+    } else {
+      // Normal behavior - go to days view
+      this.generateCalendar();
+      this.viewMode = 'days';
+    }
   }
 
   selectYear(year: number): void {
+    // Don't allow selection of disabled years
+    if (this.isYearDisabled(year)) {
+      return;
+    }
+
     this.currentYear = year;
     this.currentMonth = new Date(this.currentYear, this.currentMonthIndex, 1);
     this.generateCalendar();

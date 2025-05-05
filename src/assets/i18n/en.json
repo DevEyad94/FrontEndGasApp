@@ -57,6 +57,8 @@
     "TODAY": "Today",
     "CLEAR": "Clear",
     "SELECT_DATE": "Select date",
+    "SELECT_MONTH_YEAR": "Select month and year",
+    "CURRENT_MONTH": "Current month",
     "DAYS": {
       "SUNDAY": "Su",
       "MONDAY": "Mo",
