@@ -29,6 +29,8 @@
           [placeholder]="'Select date'"
           [required]="true"
           [errorMessage]="'Date is required'"
+          [monthYearOnly]="true"
+          [disabledDates]="disabledMonths"
           formControlName="fieldMaintenanceDate"
         ></app-date-picker>
       </div>

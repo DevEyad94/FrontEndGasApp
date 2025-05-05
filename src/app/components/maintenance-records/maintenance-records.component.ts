@@ -66,7 +66,6 @@ export class MaintenanceRecordsComponent implements OnInit, OnDestroy {
   isFormVisible = false;
   isSubmitting = false;
 
-
   // Sort
   sortColumn = 'fieldMaintenanceDate';
   sortDirection = 'desc';
@@ -74,12 +73,15 @@ export class MaintenanceRecordsComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   // Add property to store cached options
-  private maintenanceTypeOptions: {value: number, label: string}[] = [];
-  private fieldOptions: {value: number, label: string}[] = [];
+  private maintenanceTypeOptions: { value: number; label: string }[] = [];
+  private fieldOptions: { value: number; label: string }[] = [];
 
   // Delete confirmation properties
   showDeleteConfirmation = false;
   recordToDelete: FieldMaintenance | null = null;
+
+  // Disabled months for maintenance
+  disabledMonths: { year: number; months: number[] }[] = [];
 
   constructor(
     private gasService: GasService,
@@ -152,7 +154,28 @@ export class MaintenanceRecordsComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error fetching filter options:', error);
-        this.toastService.error('Failed to load filter options. Please try again later.');
+        this.toastService.error(
+          'Failed to load filter options. Please try again later.'
+        );
+      },
+    });
+  }
+
+  loadDisabledMonths(): void {
+    this.gasService.getFieldMaintenanceDisabledMonths().subscribe({
+      next: (response) => {
+        if (response.data) {
+          this.disabledMonths = response.data.map((dm) => ({
+            year: dm.year,
+            months: dm.disabledMonths,
+          }));
+        }
+      },
+      error: (error) => {
+        console.error('Error loading disabled months:', error);
+        this.toastService.error(
+          'Failed to load disabled months. Please try again later.'
+        );
       },
     });
   }
@@ -176,7 +199,9 @@ export class MaintenanceRecordsComponent implements OnInit, OnDestroy {
         error: (error) => {
           console.error('Error fetching maintenance records:', error);
           this.isLoading = false;
-          this.toastService.error('Failed to load maintenance records. Please try again later.');
+          this.toastService.error(
+            'Failed to load maintenance records. Please try again later.'
+          );
         },
       });
   }
@@ -198,6 +223,9 @@ export class MaintenanceRecordsComponent implements OnInit, OnDestroy {
 
   toggleForm(isNew: boolean | null = false): void {
     this.isFormVisible = !this.isFormVisible;
+
+    // Load disabled months for maintenance
+    this.loadDisabledMonths();
 
     if (this.isFormVisible && !this.isEditMode) {
       this.resetForm();
@@ -222,7 +250,9 @@ export class MaintenanceRecordsComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     if (this.recordForm.invalid) {
       this.markFormGroupTouched(this.recordForm);
-      this.toastService.warning('Please fill in all required fields correctly.');
+      this.toastService.warning(
+        'Please fill in all required fields correctly.'
+      );
       return;
     }
 
@@ -246,7 +276,9 @@ export class MaintenanceRecordsComponent implements OnInit, OnDestroy {
         error: (error) => {
           console.error('Error updating maintenance record:', error);
           this.isSubmitting = false;
-          this.toastService.error('Failed to update maintenance record. Please try again.');
+          this.toastService.error(
+            'Failed to update maintenance record. Please try again.'
+          );
         },
       });
     } else {
@@ -265,7 +297,9 @@ export class MaintenanceRecordsComponent implements OnInit, OnDestroy {
         error: (error) => {
           console.error('Error adding maintenance record:', error);
           this.isSubmitting = false;
-          this.toastService.error('Failed to add maintenance record. Please try again.');
+          this.toastService.error(
+            'Failed to add maintenance record. Please try again.'
+          );
         },
       });
     }
@@ -328,11 +362,15 @@ export class MaintenanceRecordsComponent implements OnInit, OnDestroy {
       .subscribe({
         next: () => {
           this.loadRecords();
-          this.toastService.success(`Maintenance record for ${record.fieldName} has been deleted.`);
+          this.toastService.success(
+            `Maintenance record for ${record.fieldName} has been deleted.`
+          );
         },
         error: (error) => {
           console.error('Error deleting maintenance record:', error);
-          this.toastService.error('Failed to delete maintenance record. Please try again.');
+          this.toastService.error(
+            'Failed to delete maintenance record. Please try again.'
+          );
         },
       });
   }
@@ -374,6 +412,6 @@ export class MaintenanceRecordsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 }
