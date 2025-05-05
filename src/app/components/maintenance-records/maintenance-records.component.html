@@ -139,6 +139,7 @@
         <app-label [label]="'Start Date'" [required]="true"></app-label>
         <app-date-picker
           [placeholder]="'Select start date'"
+          [monthYearOnly]="true"
           formControlName="startDate"
         ></app-date-picker>
       </div>
@@ -147,6 +148,7 @@
         <app-label [label]="'End Date'" [required]="true"></app-label>
         <app-date-picker
           [placeholder]="'Select end date'"
+          [monthYearOnly]="true"
           formControlName="endDate"
         ></app-date-picker>
       </div>
@@ -222,7 +224,7 @@
           </tr>
           <tr *ngFor="let record of maintenanceRecords" class="hover:bg-gray-100 dark:hover:bg-gray-600">
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-              {{ record.fieldMaintenanceDate | date:'MMM d, yyyy' }}
+              {{ record.fieldMaintenanceDate | date:'MMMM, yyyy' }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
               {{ record.fieldName }}

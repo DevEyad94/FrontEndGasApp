@@ -35,8 +35,11 @@ export class GasService {
     sortColumn: string = 'dateOfProduction',
     sortDirection: string = 'desc'
   ): Observable<PaginatedResult<GenericResponse<ProductionRecord[]> | null>> {
-    const paginatedResult: PaginatedResult<GenericResponse<ProductionRecord[]> | null> =
-      new PaginatedResult<GenericResponse<ProductionRecord[]> | null>();
+    const paginatedResult: PaginatedResult<GenericResponse<
+      ProductionRecord[]
+    > | null> = new PaginatedResult<GenericResponse<
+      ProductionRecord[]
+    > | null>();
 
     let params = new HttpParams();
 
@@ -78,8 +81,9 @@ export class GasService {
     sortColumn: string = 'dateOfProduction',
     sortDirection: string = 'desc'
   ): Observable<PaginatedResult<GenericResponse<ProductionRecord[]>>> {
-    const paginatedResult: PaginatedResult<GenericResponse<ProductionRecord[]>> =
-      new PaginatedResult<GenericResponse<ProductionRecord[]>>();
+    const paginatedResult: PaginatedResult<
+      GenericResponse<ProductionRecord[]>
+    > = new PaginatedResult<GenericResponse<ProductionRecord[]>>();
 
     let params = new HttpParams();
 
@@ -97,8 +101,18 @@ export class GasService {
     }
 
     if (filter.search) params = params.append('search', filter.search);
-    if (filter.startDate) params = params.append('StartDate', filter.startDate);
-    if (filter.endDate) params = params.append('EndDate', filter.endDate);
+    if (filter.startDate) {
+      const formattedStartDate = new Date(filter.startDate)
+        .toISOString()
+        .split('T')[0];
+      params = params.append('StartDate', formattedStartDate);
+    }
+    if (filter.endDate) {
+      const formattedEndDate = new Date(filter.endDate)
+        .toISOString()
+        .split('T')[0];
+      params = params.append('EndDate', formattedEndDate);
+    }
     if (filter.zFieldId)
       params = params.append('zFieldId', filter.zFieldId.toString());
     if (filter.minProductionRate)
@@ -131,48 +145,47 @@ export class GasService {
       );
   }
 
-  getProductionRecord(id: string): Observable<GenericResponse<ProductionRecord>> {
-    return this.http
-      .get<GenericResponse<ProductionRecord>>(
-        `${this.apiUrl}productionrecord/${id}`
-      );
+  getProductionRecord(
+    id: string
+  ): Observable<GenericResponse<ProductionRecord>> {
+    return this.http.get<GenericResponse<ProductionRecord>>(
+      `${this.apiUrl}productionrecord/${id}`
+    );
   }
 
   addProductionRecord(
     record: AddProductionRecordDto
   ): Observable<GenericResponse<ProductionRecord>> {
-    return this.http
-      .post<GenericResponse<ProductionRecord>>(
-        `${this.apiUrl}productionrecord`,
-        record
-      );
+    return this.http.post<GenericResponse<ProductionRecord>>(
+      `${this.apiUrl}productionrecord`,
+      record
+    );
   }
 
   updateProductionRecord(
     record: UpdateProductionRecordDto
   ): Observable<GenericResponse<ProductionRecord>> {
-    return this.http
-      .put<GenericResponse<ProductionRecord>>(
-        `${this.apiUrl}productionrecord`,
-        record
-      );
+    return this.http.put<GenericResponse<ProductionRecord>>(
+      `${this.apiUrl}productionrecord`,
+      record
+    );
   }
 
-  deleteProductionRecord(id: string): Observable<GenericResponse<ProductionRecord[]>> {
-    return this.http
-      .delete<GenericResponse<ProductionRecord[]>>(
-        `${this.apiUrl}productionrecord/${id}`
-      );
+  deleteProductionRecord(
+    id: string
+  ): Observable<GenericResponse<ProductionRecord[]>> {
+    return this.http.delete<GenericResponse<ProductionRecord[]>>(
+      `${this.apiUrl}productionrecord/${id}`
+    );
   }
 
   importProductionRecords(file: File): Observable<GenericResponse<number>> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http
-      .post<GenericResponse<number>>(
-        `${this.apiUrl}productionrecord/import`,
-        formData
-      );
+    return this.http.post<GenericResponse<number>>(
+      `${this.apiUrl}productionrecord/import`,
+      formData
+    );
   }
 
   // Field Maintenance
@@ -182,8 +195,11 @@ export class GasService {
     sortColumn: string = 'fieldMaintenanceDate',
     sortDirection: string = 'desc'
   ): Observable<PaginatedResult<GenericResponse<FieldMaintenance[]> | null>> {
-    const paginatedResult: PaginatedResult<GenericResponse<FieldMaintenance[]> | null> =
-      new PaginatedResult<GenericResponse<FieldMaintenance[]> | null>();
+    const paginatedResult: PaginatedResult<GenericResponse<
+      FieldMaintenance[]
+    > | null> = new PaginatedResult<GenericResponse<
+      FieldMaintenance[]
+    > | null>();
 
     let params = new HttpParams();
 
@@ -225,8 +241,9 @@ export class GasService {
     sortColumn: string = 'fieldMaintenanceDate',
     sortDirection: string = 'desc'
   ): Observable<PaginatedResult<GenericResponse<FieldMaintenance[] | null>>> {
-    const paginatedResult: PaginatedResult<GenericResponse<FieldMaintenance[] | null>> =
-      new PaginatedResult<GenericResponse<FieldMaintenance[] | null>>();
+    const paginatedResult: PaginatedResult<
+      GenericResponse<FieldMaintenance[] | null>
+    > = new PaginatedResult<GenericResponse<FieldMaintenance[] | null>>();
 
     let params = new HttpParams();
 
@@ -244,8 +261,18 @@ export class GasService {
     }
 
     if (filter.search) params = params.append('search', filter.search);
-    if (filter.startDate) params = params.append('StartDate', filter.startDate);
-    if (filter.endDate) params = params.append('EndDate', filter.endDate);
+    if (filter.startDate) {
+      const formattedStartDate = new Date(filter.startDate)
+        .toISOString()
+        .split('T')[0];
+      params = params.append('StartDate', formattedStartDate);
+    }
+    if (filter.endDate) {
+      const formattedEndDate = new Date(filter.endDate)
+        .toISOString()
+        .split('T')[0];
+      params = params.append('EndDate', formattedEndDate);
+    }
     if (filter.zMaintenanceTypeId)
       params = params.append(
         'zMaintenanceTypeId',
@@ -276,49 +303,53 @@ export class GasService {
       );
   }
 
-  getFieldMaintenance(id: string): Observable<GenericResponse<FieldMaintenance>> {
-    return this.http
-      .get<GenericResponse<FieldMaintenance>>(
-        `${this.apiUrl}fieldmaintenance/${id}`
-      );
+  getFieldMaintenance(
+    id: string
+  ): Observable<GenericResponse<FieldMaintenance>> {
+    return this.http.get<GenericResponse<FieldMaintenance>>(
+      `${this.apiUrl}fieldmaintenance/${id}`
+    );
   }
 
   addFieldMaintenance(
     maintenance: AddFieldMaintenanceDto
   ): Observable<GenericResponse<FieldMaintenance>> {
-    return this.http
-      .post<GenericResponse<FieldMaintenance>>(
-        `${this.apiUrl}fieldmaintenance`,
-        maintenance
-      );
+    return this.http.post<GenericResponse<FieldMaintenance>>(
+      `${this.apiUrl}fieldmaintenance`,
+      maintenance
+    );
   }
 
   updateFieldMaintenance(
     maintenance: UpdateFieldMaintenanceDto
   ): Observable<GenericResponse<FieldMaintenance>> {
-    return this.http
-      .put<GenericResponse<FieldMaintenance>>(
-        `${this.apiUrl}fieldmaintenance`,
-        maintenance
-      );
-  }
-
-  deleteFieldMaintenance(id: string): Observable<GenericResponse<FieldMaintenance[]>> {
-    return this.http
-      .delete<GenericResponse<FieldMaintenance[]>>(
-        `${this.apiUrl}fieldmaintenance/${id}`
-      );
-  }
-
-  getDisabledMonths(): Observable<GenericResponse<{ year: number; disabledMonths: number[] }[]>> {
-    return this.http.get<GenericResponse<{ year: number; disabledMonths: number[] }[]>>(
-      `${this.apiUrl}productionrecord/disabledmonths`
+    return this.http.put<GenericResponse<FieldMaintenance>>(
+      `${this.apiUrl}fieldmaintenance`,
+      maintenance
     );
   }
 
-  getFieldMaintenanceDisabledMonths(): Observable<GenericResponse<{ year: number; disabledMonths: number[] }[]>> {
-    return this.http.get<GenericResponse<{ year: number; disabledMonths: number[] }[]>>(
-      `${this.apiUrl}fieldmaintenance/disabledmonths`
+  deleteFieldMaintenance(
+    id: string
+  ): Observable<GenericResponse<FieldMaintenance[]>> {
+    return this.http.delete<GenericResponse<FieldMaintenance[]>>(
+      `${this.apiUrl}fieldmaintenance/${id}`
     );
+  }
+
+  getDisabledMonths(): Observable<
+    GenericResponse<{ year: number; disabledMonths: number[] }[]>
+  > {
+    return this.http.get<
+      GenericResponse<{ year: number; disabledMonths: number[] }[]>
+    >(`${this.apiUrl}productionrecord/disabledmonths`);
+  }
+
+  getFieldMaintenanceDisabledMonths(): Observable<
+    GenericResponse<{ year: number; disabledMonths: number[] }[]>
+  > {
+    return this.http.get<
+      GenericResponse<{ year: number; disabledMonths: number[] }[]>
+    >(`${this.apiUrl}fieldmaintenance/disabledmonths`);
   }
 }

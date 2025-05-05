@@ -134,6 +134,7 @@
         <app-label [label]="'Start Date'"></app-label>
         <app-date-picker
           [placeholder]="'Select start date'"
+          [monthYearOnly]="true"
           formControlName="startDate"
         ></app-date-picker>
       </div>
@@ -142,6 +143,7 @@
         <app-label [label]="'End Date'"></app-label>
         <app-date-picker
           [placeholder]="'Select end date'"
+          [monthYearOnly]="true"
           formControlName="endDate"
         ></app-date-picker>
       </div>

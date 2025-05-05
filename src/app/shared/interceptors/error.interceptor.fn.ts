@@ -62,7 +62,7 @@ export function errorInterceptor(
             break;
           case 404:
             console.log('🔍 404 error');
-            toast.error('Resource not found', 404);
+            toast.error(errorMessage || 'Resource not found', 404);
             console.log('🔔 Toast error called with status 404');
             // No router navigation here to avoid circular dependencies
             break;
